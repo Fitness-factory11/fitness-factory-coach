@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fitness Factory – المحادثة</title>
+  <style>
+    :root{
+      --bg:#0d0d0d; --card:#121212; --text:#ffffff; --muted:#cfcfcf; --brand:#F5B301;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Arabic", "Tajawal", sans-serif;
+      display:flex; min-height:100vh; align-items:center; justify-content:center; padding:16px;
+    }
+    .wrap{width:100%; max-width:780px}
+    .top{
+      display:flex; align-items:center; gap:12px; margin-bottom:12px;
+    }
+    .logo{
+      width:42px; height:42px; border-radius:12px; background:#1a1a1a;
+      display:grid; place-items:center; border:1px solid #222;
+    }
+    .logo:before{
+      content:"🏋️"; filter:grayscale(0); font-size:22px;
+    }
+    .brand h1{margin:0; font-size:20px; color:var(--brand); letter-spacing:.5px}
+    .brand p{margin:0; color:var(--muted); font-size:13px}
+    .card{
+      background:var(--card); border:1px solid #1f1f1f; border-radius:16px; overflow:hidden;
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+    .chat{
+      height:60vh; min-height:420px; max-height:70vh; overflow:auto; padding:16px;
+      display:flex; flex-direction:column; gap:10px;
+      scroll-behavior:smooth;
+    }
+    .msg{max-width:84%; padding:10px 12px; border-radius:14px; line-height:1.55; font-size:14.5px;}
+    .user{align-self:flex-start; background:#1b1b1b; border:1px solid #2a2a2a;}
+    .bot{align-self:flex-end; background:var(--brand); color:#1a1a1a; font-weight:600;}
+    .input{
+      display:flex; gap:8px; padding:12px; border-top:1px solid #1f1f1f; background:#141414;
+    }
+    input[type="text"]{
+      flex:1; background:#0f0f0f; border:1px solid #252525; color:var(--text);
+      padding:12px 14px; border-radius:12px; outline:none; font-size:14px;
+    }
+    button{
+      background:var(--brand); color:#000; border:none; padding:12px 16px; border-radius:12px;
+      font-weight:700; cursor:pointer; transition:.2s; min-width:110px;
+    }
+    button:hover{filter:saturate(1.1) brightness(.98)}
+    .subtle{color:#9d9d9d; font-size:12px; margin-top:8px}
+    .pill{
+      display:inline-block; padding:6px 10px; border:1px solid #2a2a2a; border-radius:999px;
+      color:#bdbdbd; font-size:12px; margin:0 6px 6px 0; cursor:pointer;
+    }
+    .pill:hover{border-color:#3a3a3a; color:#fff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo"></div>
+      <div class="brand">
+        <h1>Fitness Factory – المدرب الذكي</h1>
+        <p>نسخة واجهة فقط (تجريبية). الربط بالذكاء الصناعي يتم في الخطوة القادمة.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="chat" class="chat">
+        <div class="msg bot">هلا فيك! أنا مدربك الذكي في Fitness Factory 💪
+        اكتب سؤالك عن التمارين، البدائل، أو السعرات. (نسخة تجريبية)</div>
+      </div>
+
+      <div style="padding:10px 12px;">
+        <span class="pill" onclick="quick('أبي بديل لسكوات لأن ركبتي تعورني')">بديل سكوات</span>
+        <span class="pill" onclick="quick('أبي جدول للصدر للمبتدئين')">صدر مبتدئ</span>
+        <span class="pill" onclick="quick('كم أحتاج بروتين وزن 80 وطول 175')">حساب بروتين</span>
+      </div>
+
+      <div class="input">
+        <input id="q" type="text" placeholder="اكتب سؤالك هنا…" />
+        <button id="send">إرسال</button>
+      </div>
+    </div>
+    <div class="subtle">ملاحظة: هذه نسخة للواجهة فقط. قريباً نربطها بـ API.</div>
+  </div>
+
+  <script>
+    const log = document.getElementById('chat');
+    const q   = document.getElementById('q');
+    const send= document.getElementById('send');
+
+    function add(role, text){
+      const div = document.createElement('div');
+      div.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
+      div.textContent = text;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function quick(text){ q.value = text; q.focus(); }
+
+    // ردود تجريبية (بدون باك-إند)
+    function mockReply(text){
+      const t = text.toLowerCase();
+      if (t.includes('سكوات') || t.includes('squat')){
+        return 'بديل السكوات لو في ألم ركبة: • Bulgarian Split Squat • Goblet Squat بمدى قصير • Leg Press بوزن خفيف. جرّب 3 مجموعات × 10-12 مع إحماء كويس.';
+      }
+      if (t.includes('صدر') || t.includes('chest')){
+        return 'صدر للمبتدئ: 1) Dumbbell Press 3×10  2) Incline Push-ups 3×8-12  3) Cable Fly 3×12. ارتح 60-90 ثانية. ركّز على التحكم بالحركة.';
+      }
+      if (t.includes('بروتين') || t.includes('protein')){
+        return 'تقدير سريع للبروتين: بين 1.6 إلى 2.2 غرام لكل كجم من وزنك. مثال وزن 80 = 128–176 غ/يوم. وزّعها على 3-4 وجبات.';
+      }
+      if (t.includes('سعرات') || t.includes('calorie') || t.includes('سعراتي')){
+        return 'حساب السعرات تقديري: لو هدفك تنشيف ابدأ من وزن جسمك × 30–32 كالوري، ولو ضخامة × 34–36. اضبط أسبوعيًا حسب الميزان.';
+      }
+      return 'وصلتني رسالتك ✅ — في النسخة النهائية بربطك بمدرب ذكي يجاوب بدقة من قاعدة تمارينك وروابط اليوتيوب.';
+    }
+
+    async function handleSend(){
+      const text = q.value.trim(); if(!text) return;
+      add('user', text); q.value='';
+      // مكان الربط الفعلي لاحقاً:
+      // const r = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: text }) });
+      // const data = await r.json(); add('bot', data.reply || 'تعذر الرد حالياً');
+      const reply = mockReply(text); // مؤقت
+      add('bot', reply);
+    }
+
+    send.onclick = handleSend;
+    q.addEventListener('keydown', e => { if(e.key==='Enter') handleSend(); });
+  </script>
+</body>
+</html>
