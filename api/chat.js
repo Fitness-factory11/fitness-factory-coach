@@ -1,42 +1,36 @@
-// /api/chat.js  — Vercel Serverless Function
-
-import OpenAI from "openai";
-
 export default async function handler(req, res) {
-  try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Method Not Allowed" });
-    }
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Only POST requests are allowed" });
+  }
 
-    const { message } = req.body || {};
-    if (!message || !message.trim()) {
+  try {
+    const { message } = req.body;
+    if (!message) {
       return res.status(400).json({ error: "No message provided" });
     }
 
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-    // شخصية المدرب
-    const systemPrompt = `
-أنت مدرب شخصي افتراضي لبراند Fitness Factory. ردودك قصيرة وواضحة وبالسعودي.
-- أعطِ خطوات عملية 3–5 نقاط.
-- إذا سُئلت عن تمرين: أعطِ التقنية باختصار + بديلين.
-- لا تقدّم تشخيصًا طبيًا. لو فيه ألم شديد: انصح بمراجعة مختص.
-- لو سُئلت عن سعرات: أعطِ تقديرًا عامًا مع تنبيه أنه تقريبي.
-    `.trim();
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 0.4,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: message }
-      ],
+    // استدعاء OpenAI API
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-5",
+        input: message,
+      }),
     });
 
-    const reply = completion.choices?.[0]?.message?.content || "ما قدرت أرد الحين.";
-    return res.status(200).json({ reply });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: "Server error" });
+    const data = await response.json();
+
+    if (data?.output?.[0]?.content?.[0]?.text) {
+      res.status(200).json({ reply: data.output[0].content[0].text });
+    } else {
+      res.status(500).json({ error: "Unexpected response format", raw: data });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to connect to OpenAI API" });
   }
 }
