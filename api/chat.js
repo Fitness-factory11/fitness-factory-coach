@@ -9,50 +9,49 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "No message provided" });
     }
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const systemPrompt = `
+أنت مدرب شخصي افتراضي لبراند Fitness Factory. ردودك قصيرة وواضحة وبالسعودي.
+- أعطِ خطوات عملية 3–5 نقاط كحد أقصى.
+- إذا السؤال عن تمرين: أعطِ التقنية باختصار + بديلين.
+- لا تقدّم تشخيصًا طبيًا. لو فيه ألم شديد: انصح بمراجعة مختص.
+- لو سُئلت عن سعرات: أعطِ تقديرًا عامًا مع تنبيه أنه تقريبي.
+    `.trim();
+
+    // نستخدم الواجهة المستقرة
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-5",
-        input: message,
+        model: "gpt-4o-mini",      // موديل متاح لمعظم الحسابات
+        temperature: 0.4,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: message }
+        ],
       }),
     });
 
-    const data = await response.json();
+    const data = await r.json();
 
-    // نحاول نقرأ الرد من كل الصيغ المحتملة
-    let text =
-      data.output_text ??
-      (Array.isArray(data.output)
-        ? data.output
-            .flatMap((b) =>
-              Array.isArray(b.content)
-                ? b.content
-                    .filter((c) => typeof c.text === "string")
-                    .map((c) => c.text)
-                : []
-            )
-            .join(" ")
-        : null) ??
-      data.choices?.[0]?.message?.content ??
-      data.choices?.[0]?.text ??
-      null;
+    // لو فيه خطأ من OpenAI نرجّعه مباشرة مع الرسالة
+    if (!r.ok) {
+      return res.status(r.status).json({
+        error: data?.error?.message || "OpenAI error",
+        raw: data,
+      });
+    }
 
-    text = (text || "").toString().trim();
-
+    const text = data?.choices?.[0]?.message?.content?.trim();
     if (text) {
       return res.status(200).json({ reply: text });
     } else {
-      // نرجّع الخطأ مع الخام لتشخيص أسرع
-      return res
-        .status(500)
-        .json({ error: "Unexpected response format", raw: data });
+      return res.status(500).json({ error: "Unexpected format", raw: data });
     }
-  } catch (error) {
-    console.error("API error:", error);
-    return res.status(500).json({ error: "Failed to connect to OpenAI API" });
+  } catch (e) {
+    console.error("Server error:", e);
+    return res.status(500).json({ error: "Server error" });
   }
 }
