@@ -22,6 +22,7 @@
       width:42px; height:42px; border-radius:12px; background:#1a1a1a;
       display:grid; place-items:center; border:1px solid #222;
     }
+    .loading{opacity:.7;pointer-events:none}
     .logo:before{
       content:"🏋️"; filter:grayscale(0); font-size:22px;
     }
@@ -89,51 +90,61 @@
     <div class="subtle">ملاحظة: هذه نسخة للواجهة فقط. قريباً نربطها بـ API.</div>
   </div>
 
-  <script>
-    const log = document.getElementById('chat');
-    const q   = document.getElementById('q');
-    const send= document.getElementById('send');
+   <script>
+  // عناصر الواجهة
+  const log  = document.getElementById('chat');
+  const q    = document.getElementById('q');
+  const send = document.getElementById('send');
 
-    function add(role, text){
-      const div = document.createElement('div');
-      div.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
-      div.textContent = text;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
+  // إضافة رسالة
+  function add(role, text){
+    const div = document.createElement('div');
+    div.className = `msg ${role === 'user' ? 'user' : 'bot'}`;
+    div.textContent = text;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  // أزرار جاهزة سريعة
+  function quick(text){ q.value = text; q.focus(); }
+
+  // الإرسال الحقيقي للـ API
+  async function handleSend(){
+    const text = q.value.trim(); if(!text) return;
+
+    add('user', text);
+    q.value = '';
+    send.classList.add('loading');   // تعطيل الزر مؤقتًا
+
+    try {
+      const r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      if (!r.ok) {
+        let err = 'تعذر الرد حاليًا. جرّب بعد لحظات 🙏';
+        try { const d = await r.json(); if (d?.error) err = err + ` (${d.error})`; } catch {}
+        add('bot', err);
+        return;
+      }
+
+      const data = await r.json();
+      add('bot', data.reply || 'ما لقيت رد مناسب الآن 🙏');
+    } catch (e) {
+      console.error(e);
+      add('bot', 'صار خلل بسيط بالاتصال. تأكد من الشبكة وحاول مجددًا 🙏');
+    } finally {
+      send.classList.remove('loading');
     }
+  }
 
-    function quick(text){ q.value = text; q.focus(); }
+  // ربط الأحداث
+  send.onclick = handleSend;
+  q.addEventListener('keydown', e => { if (e.key === 'Enter') handleSend(); });
+</script>
 
-    // ردود تجريبية (بدون باك-إند)
-    function mockReply(text){
-      const t = text.toLowerCase();
-      if (t.includes('سكوات') || t.includes('squat')){
-        return 'بديل السكوات لو في ألم ركبة: • Bulgarian Split Squat • Goblet Squat بمدى قصير • Leg Press بوزن خفيف. جرّب 3 مجموعات × 10-12 مع إحماء كويس.';
-      }
-      if (t.includes('صدر') || t.includes('chest')){
-        return 'صدر للمبتدئ: 1) Dumbbell Press 3×10  2) Incline Push-ups 3×8-12  3) Cable Fly 3×12. ارتح 60-90 ثانية. ركّز على التحكم بالحركة.';
-      }
-      if (t.includes('بروتين') || t.includes('protein')){
-        return 'تقدير سريع للبروتين: بين 1.6 إلى 2.2 غرام لكل كجم من وزنك. مثال وزن 80 = 128–176 غ/يوم. وزّعها على 3-4 وجبات.';
-      }
-      if (t.includes('سعرات') || t.includes('calorie') || t.includes('سعراتي')){
-        return 'حساب السعرات تقديري: لو هدفك تنشيف ابدأ من وزن جسمك × 30–32 كالوري، ولو ضخامة × 34–36. اضبط أسبوعيًا حسب الميزان.';
-      }
-      return 'وصلتني رسالتك ✅ — في النسخة النهائية بربطك بمدرب ذكي يجاوب بدقة من قاعدة تمارينك وروابط اليوتيوب.';
-    }
-
-    async function handleSend(){
-      const text = q.value.trim(); if(!text) return;
-      add('user', text); q.value='';
-      // مكان الربط الفعلي لاحقاً:
-      // const r = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: text }) });
-      // const data = await r.json(); add('bot', data.reply || 'تعذر الرد حالياً');
-      const reply = mockReply(text); // مؤقت
-      add('bot', reply);
-    }
-
-    send.onclick = handleSend;
-    q.addEventListener('keydown', e => { if(e.key==='Enter') handleSend(); });
-  </script>
 </body>
 </html>
+
