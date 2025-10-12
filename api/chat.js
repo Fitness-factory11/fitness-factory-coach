@@ -1,6 +1,9 @@
 // /api/chat.js — يقرأ قاعدة التمارين ويضيفها كسياق للرد
 import fs from "fs";
-const exercises = JSON.parse(fs.readFileSync("./data/exercises.json", "utf8"));
+import path from "path";
+const filePath = path.join(process.cwd(), "data", "exercises.json");
+const exercises = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
 function searchExercises(query, k = 5){
   const q = (query || "").toLowerCase();
   if (!q) return [];
