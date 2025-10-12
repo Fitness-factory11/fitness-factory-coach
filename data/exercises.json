@@ -7,24 +7,52 @@
     "equipment": ["دامبل"],
     "cues_ar": ["شد لوح الكتف", "نزول بطيء", "عدم قفل الكوع"],
     "alternatives_ar": ["تمرين الضغط", "Chest Press Machine"]
+    "video": "https://youtu.be/Xd9q6Z40N1k?si=CipeIzQ075QAB0kb",
+  "alt_video": "https://youtu.be/FXZcFBBJgWg?si=Gk8y5Ob5iTEd17lt"
   },
   {
-    "id": "ch_incline_pushup",
-    "name_ar": "ضغط مائل على مقعد",
+    "id": "ch_incline_cheset",
+    "name_ar": "صدر مائل علوي على الجهاز",
     "muscle": "صدر",
     "level": "مبتدئ",
-    "equipment": ["وزن جسم"],
+    "equipment": ["جهاز "],
     "cues_ar": ["جسم مستقيم", "كتفين للخلف", "تحكم بالصعود"],
     "alternatives_ar": ["ضغط عادي", "Dumbbell Press"]
+     "video": "https://youtu.be/trRErKX1AGA?si=gRPfl48dt5SyfvJb",
+  "alt_video": "https://youtu.be/w69podp4Ttc?si=4gAzbfM1-MCjByWN"
+  },
+   {
+    "id": "ch_fly_mchine",
+    "name_ar": "تجميع صدر جهاز",
+    "muscle": "صدر",
+    "level": "مبتدئ",
+    "equipment": ["جهاز"],
+    "cues_ar": ["ثبت ظهرك على المقعد" , "انحناء بسيط في الكوع"],
+    "alternatives_ar": ["تجميع دامبل", "Chest fly dumbbell"]
+    "video": "https://youtu.be/oVOLH1Xydcs?si=_dBdD-NsUZAO4MEU",
+  "alt_video": "https://youtube.com/shorts/PXDlKz287UU?si=HjIFQbcRQhW1QOMW"
   },
   {
     "id": "bk_lat_pulldown",
-    "name_ar": "سحب لات أمامي",
+    "name_ar": "سحب ظهر أمامي",
     "muscle": "ظهر",
     "level": "مبتدئ",
     "equipment": ["آلة"],
     "cues_ar": ["كوعان للأسفل", "صدر مرفوع", "لا ترجّع الوزن بسرعة"],
-    "alternatives_ar": ["Pull-ups بمساعدة", "Seated Row"]
+    "alternatives_ar": ["Wide T-bar"]
+    "video": "https://youtu.be/jDwfoPmHd1k?si=y6u2qnGIaNnKi0fB",
+  "alt_video": "https://youtube.com/shorts/uxAiZ5XMC8Q?si=CbzQAXUlTDIj9hiN"
+  },
+   {
+    "id": "bk_row_machine",
+    "name_ar": "سحب مقنص جهاز",
+    "muscle": "ظهر",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": ["امسك القبضة العمودية", "اسحب بمحاذاة الجذع", "لا ترجّع الوزن بسرعة"],
+    "alternatives_ar": ["Dumbbell row"]
+    "video": "https://youtube.com/shorts/U8L1GweYyTU?si=C-ShHDBlsIMbRd_B",
+  "alt_video": "https://youtu.be/xl1YiqQY2vA?si=uXpzwxx37uciJfHs"
   },
   {
     "id": "bk_seated_row",
