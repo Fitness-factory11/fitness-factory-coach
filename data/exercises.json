@@ -1,0 +1,110 @@
+[
+  {
+    "id": "ch_db_press",
+    "name_ar": "ضغط صدر بالدامبل",
+    "muscle": "صدر",
+    "level": "مبتدئ",
+    "equipment": ["دامبل"],
+    "cues_ar": ["شد لوح الكتف", "نزول بطيء", "عدم قفل الكوع"],
+    "alternatives_ar": ["تمرين الضغط", "Chest Press Machine"]
+  },
+  {
+    "id": "ch_incline_pushup",
+    "name_ar": "ضغط مائل على مقعد",
+    "muscle": "صدر",
+    "level": "مبتدئ",
+    "equipment": ["وزن جسم"],
+    "cues_ar": ["جسم مستقيم", "كتفين للخلف", "تحكم بالصعود"],
+    "alternatives_ar": ["ضغط عادي", "Dumbbell Press"]
+  },
+  {
+    "id": "bk_lat_pulldown",
+    "name_ar": "سحب لات أمامي",
+    "muscle": "ظهر",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": ["كوعان للأسفل", "صدر مرفوع", "لا ترجّع الوزن بسرعة"],
+    "alternatives_ar": ["Pull-ups بمساعدة", "Seated Row"]
+  },
+  {
+    "id": "bk_seated_row",
+    "name_ar": "سحب جالس",
+    "muscle": "ظهر",
+    "level": "مبتدئ",
+    "equipment": ["آلة","كبل"],
+    "cues_ar": ["شد لوح الكتف", "ظهر مستقيم"],
+    "alternatives_ar": ["Dumbbell Row", "Lat Pulldown"]
+  },
+  {
+    "id": "lg_goblet_squat",
+    "name_ar": "سكوات كوبلت",
+    "muscle": "أرجل",
+    "level": "مبتدئ",
+    "equipment": ["دامبل"],
+    "cues_ar": ["وزن على الكعبين", "صدر مرفوع", "مدى آمن للركبة"],
+    "alternatives_ar": ["Box Squat", "Leg Press"]
+  },
+  {
+    "id": "lg_leg_press",
+    "name_ar": "ضغط أرجل",
+    "muscle": "أرجل",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": ["مدى لا يقفل الركبة", "تحكم بالنزول"],
+    "alternatives_ar": ["Goblet Squat", "Split Squat"]
+  },
+  {
+    "id": "sh_db_shoulder_press",
+    "name_ar": "ضغط كتف بالدامبل",
+    "muscle": "كتف",
+    "level": "مبتدئ",
+    "equipment": ["دامبل"],
+    "cues_ar": ["أسفل الضلع مشدود", "مسار عمودي", "لا تفرط بتقويس الظهر"],
+    "alternatives_ar": ["Machine Shoulder Press", "Arnold Press"]
+  },
+  {
+    "id": "sh_lateral_raise",
+    "name_ar": "رفرفة جانبية",
+    "muscle": "كتف",
+    "level": "مبتدئ",
+    "equipment": ["دامبل"],
+    "cues_ar": ["مرفق أعلى من الرسغ", "مدى متوسط", "تحكم"],
+    "alternatives_ar": ["Cable Lateral Raise", "Machine Lateral"]
+  },
+  {
+    "id": "ar_curl_db",
+    "name_ar": "بايسبس دامبل كيرل",
+    "muscle": "ذراع",
+    "level": "مبتدئ",
+    "equipment": ["دامبل"],
+    "cues_ar": ["مرفق ثابت", "صعود بتحكم", "نزول أبطأ"],
+    "alternatives_ar": ["EZ Bar Curl", "Cable Curl"]
+  },
+  {
+    "id": "ar_triceps_pushdown",
+    "name_ar": "ترايسبس حبل كيبل",
+    "muscle": "ذراع",
+    "level": "مبتدئ",
+    "equipment": ["كبل"],
+    "cues_ar": ["مرفق ملاصق للجسم", "مدّ كامل بدون قفل قوي"],
+    "alternatives_ar": ["Overhead Triceps Extension", "Bench Dips"]
+  },
+  {
+    "id": "core_plank",
+    "name_ar": "بلانك",
+    "muscle": "كور",
+    "level": "مبتدئ",
+    "equipment": ["وزن جسم"],
+    "cues_ar": ["حوض محايد", "كتف فوق الكوع", "نَفَس هادئ"],
+    "alternatives_ar": ["Side Plank", "Dead Bug"]
+  },
+  {
+    "id": "core_dead_bug",
+    "name_ar": "ديد بق",
+    "muscle": "كور",
+    "level": "مبتدئ",
+    "equipment": ["وزن جسم"],
+    "cues_ar": ["أسفل ظهر ملاصق للأرض", "حركة بطيئة"],
+    "alternatives_ar": ["Plank", "Bird Dog"]
+  }
+]
