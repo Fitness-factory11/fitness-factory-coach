@@ -1,6 +1,6 @@
 // /api/chat.js — يقرأ قاعدة التمارين ويضيفها كسياق للرد
-import exercises from "../data/exercises.json" assert { type: "json" };
-
+import fs from "fs";
+const exercises = JSON.parse(fs.readFileSync("./data/exercises.json", "utf8"));
 function searchExercises(query, k = 5){
   const q = (query || "").toLowerCase();
   if (!q) return [];
