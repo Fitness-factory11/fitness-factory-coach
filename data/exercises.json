@@ -60,26 +60,87 @@
     "muscle": "ظهر",
     "level": "مبتدئ",
     "equipment": ["آلة","كبل"],
-    "cues_ar": ["شد لوح الكتف", "ظهر مستقيم"],
-    "alternatives_ar": ["Dumbbell Row", "Lat Pulldown"]
+    "cues_ar": [ "اسحب باتجاه البطن" ,"اختر المسكة الضيقة" ,"شد لوح الكتف", "ظهر مستقيم"],
+    "alternatives_ar": ["Dumbbell Bent over Row"]
+     "video": "https://youtu.be/TSyJErpGdpQ?si=H23Ptb3hP6tBaeQu",
+  "alt_video": "https://youtube.com/shorts/IOOLhrkN_NI?si=CdQoSzjb4mxzvKob"
   },
   {
-    "id": "lg_goblet_squat",
-    "name_ar": "سكوات كوبلت",
-    "muscle": "أرجل",
+    "id": "bk_Back_Extension",
+    "name_ar": "أسفل الظهر(قطنية)",
+    "muscle": "ظهر",
     "level": "مبتدئ",
-    "equipment": ["دامبل"],
-    "cues_ar": ["وزن على الكعبين", "صدر مرفوع", "مدى آمن للركبة"],
-    "alternatives_ar": ["Box Squat", "Leg Press"]
+    "equipment": ["آلة","كبل"],
+    "cues_ar": ["ااضبط الجهاز واجعله مناسب لطولك حيث تكون حافة الجهاز موازية للحوض" ,"اجعل ظهرك مشدوداً ومستقيم"],
+    "alternatives_ar": ["Dumbbell deadleft"]
+     "video": "https://youtube.com/shorts/peFhyj7hZ6U?si=i7XBEvizPhf--XJ1",
+  "alt_video": "https://youtube.com/shorts/2xvFNdExbtw?si=BZtJq6gnNTljd3wb"
   },
   {
-    "id": "lg_leg_press",
-    "name_ar": "ضغط أرجل",
+    "id": "lg_hack_squat",
+    "name_ar": "هاك سكوات",
     "muscle": "أرجل",
     "level": "مبتدئ",
     "equipment": ["آلة"],
-    "cues_ar": ["مدى لا يقفل الركبة", "تحكم بالنزول"],
-    "alternatives_ar": ["Goblet Squat", "Split Squat"]
+    "cues_ar": ["وزن على الكعبين", "صدر مرفوع", "مدى آمن للركبة"],
+    "alternatives_ar": ["Caple Squat"]
+     "video": "https://youtube.com/shorts/tb5KeF00yII?si=rtKMLFHQAz1Ik2eh",
+  "alt_video": "https://youtu.be/nPrz-nyFKgU?si=tlVpAr82vPe3M4Dl"
+  },
+  {
+    "id": "lg_Leg_Extension",
+    "name_ar": "رفرفة أمامية",
+    "muscle": "أرجل",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar":["اضبط درجة مسند المقعد حسب جسمك", "ابدا بدفع الوزن الى أعلى بحيث يصبح الحمل على الفخذ الأمامي"],
+    "alternatives_ar": ["Seated Leg press"]
+     "video": "https://youtu.be/WcT9KdrH7Zc?si=q2SDcEFCTbxTTzsY",
+  "alt_video": "https://youtu.be/qCR9bN3G1t4?si=1wSsxOumBvDi_BKT"
+  },
+  {
+    "id": "lg_Lunges",
+    "name_ar":  "لانجز",
+    "muscle": "أرجل",
+    "level": "مبتدئ",
+    "equipment": ["دامبل"],
+    "cues_ar": ["امسك الوزن المناسب لك وقف بإستقامة", "يتم عمل التمرين لكل رجل"],
+    "alternatives_ar": [ "Caple Reverse Lunges"]
+     "video": "https://youtu.be/OqRvJ1SPcdE?si=EqG8hLl9ULpxPKnO",
+  "alt_video": "https://youtu.be/_FwaDllRHuc?si=UDzawTzcZxnjxVg5"
+  },
+    {
+    "id": "lg_Lying_leg_curl",
+    "name_ar":  "رفرفة خلفية",
+    "muscle": "أرجل",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": [ "ثبت وشد جسمك", "استلق على المقعد"],
+    "alternatives_ar": [ "Seated Leg curl"]
+     "video": "https://youtu.be/OuB85ZKE888?si=miueiKTumZ8CJbJw",
+  "alt_video": "https://youtu.be/vRVzX60Oi2E?si=Mp_EllDcTolt1wUw"
+  },
+   {
+    "id": "lg_Hip_adduction",
+    "name_ar":  "الفخذ الداخلي",
+    "muscle": "أرجل",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": ["كرر الحركة بتحكم شديد لتفعيل العضلة بالشكل المطلوب","التمرين يستهدف العضلة الداخلية او الضامة"],
+    "alternatives_ar": [ "hip Caple"]
+     "video": "https://youtu.be/PI_oDmfgKvE?si=M3w7pa0kJCvvI-fH",
+  "alt_video": "https://youtube.com/shorts/tPaS2tYD2Ms?si=Fw2iwlRM0eNr_yua"
+  },
+  {
+    "id": "lg_Calf_Raises",
+    "name_ar":  "البطات (السمانة)",
+    "muscle": "أرجل",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": ["القدم مستقيمة","طلوع ببطء"],
+    "alternatives_ar": [ "seated calf"]
+     "video": "https://youtube.com/shorts/27hezFhIsgk?si=5xu0swqdYaklnb6h",
+  "alt_video": "https://youtu.be/HlIRrB0g7sI?si=iuvO8y4oA0pl1X6g"
   },
   {
     "id": "sh_db_shoulder_press",
