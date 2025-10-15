@@ -139,35 +139,107 @@
     "equipment": ["آلة"],
     "cues_ar": ["القدم مستقيمة","طلوع ببطء"],
     "alternatives_ar": [ "seated calf"]
-     "video": "https://youtube.com/shorts/27hezFhIsgk?si=5xu0swqdYaklnb6h",
+     "video": "https://youtu.be/2SvNjQHHCx8?si=2dkHJmUv68daLBVL",
   "alt_video": "https://youtu.be/HlIRrB0g7sI?si=iuvO8y4oA0pl1X6g"
+  },
+  {
+    "id": "lg_sumo_squat",
+    "name_ar":  "سومو سكوات",
+    "muscle": "مؤخرة",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": ["كرر التمرين ببطء", "تحكم بالوزن"],
+    "alternatives_ar": [ "Hip thrust bar"]
+     "video": "https://youtube.com/shorts/Va6Wg_jKilM?si=MYjVmihaESWj2Q9Q",
+  "alt_video": "https://youtu.be/zZn349RNyYw?si=orIjTytPKa2TTojk"
+  },
+   {
+    "id": "lg_hip_thrust",
+    "name_ar":  "هيب ثريست",
+    "muscle": "مؤخرة",
+    "level": "مبتدئ",
+    "equipment": ["دامبل"],
+    "cues_ar": ["القدم اوسع من ستوى الكتف", "الحفاظ على حركة الركة"],
+    "alternatives_ar": [ "Sumo caple squat"]
+     "video": "https://youtube.com/shorts/27hezFhIsgk?si=5xu0swqdYaklnb6h",
+  "alt_video": "https://youtube.com/shorts/O6b6ioDSu3Y?si=AnpJiBoVJ4gYW1QY"
+  },
+   {
+    "id": "lg_caple_Pull_through",
+    "name_ar":  "سحب كيبل ",
+    "muscle": "مؤخرة",
+    "level": "مبتدئ",
+    "equipment": ["كيبل"],
+    "cues_ar": ["التحكم بالوزن", " كرر التمرين ببطء"],
+    "alternatives_ar": [ "Rear Kick Back"]
+     "video": "https://youtu.be/IU-ERkjTKXA?si=ROWVEKESPUS-KwUp",
+  "alt_video": "https://youtu.be/EtuKP--UHtw?si=uqDiGZevfO1AaQay"
   },
   {
     "id": "sh_db_shoulder_press",
     "name_ar": "ضغط كتف بالدامبل",
     "muscle": "كتف",
     "level": "مبتدئ",
-    "equipment": ["دامبل"],
+    "equipment": ["جهاز"],
     "cues_ar": ["أسفل الضلع مشدود", "مسار عمودي", "لا تفرط بتقويس الظهر"],
-    "alternatives_ar": ["Machine Shoulder Press", "Arnold Press"]
+    "alternatives_ar": ["Machine Shoulder dumbbell"]
+     "video": "https://youtu.be/XToMtOras0w?si=vTo2f7IxvK2b0zBT",
+  "alt_video": "https://youtube.com/shorts/pjIrjwBjvu4?si=IS6NVb16OmhnlqCQ"
   },
   {
     "id": "sh_lateral_raise",
     "name_ar": "رفرفة جانبية",
     "muscle": "كتف",
     "level": "مبتدئ",
-    "equipment": ["دامبل"],
+    "equipment": ["جهاز"],
     "cues_ar": ["مرفق أعلى من الرسغ", "مدى متوسط", "تحكم"],
-    "alternatives_ar": ["Cable Lateral Raise", "Machine Lateral"]
+    "alternatives_ar": ["Shoulder Lateral Dumbell"]  
+    "video": "https://youtube.com/shorts/AyaiYr0RIwE?si=i1RCxHX-NjuP4Zvh",
+  "alt_video": "https://youtube.com/shorts/VxRIwXS_76M?si=EV1_F7c_wFnbZ83x"
   },
   {
-    "id": "ar_curl_db",
-    "name_ar": "بايسبس دامبل كيرل",
-    "muscle": "ذراع",
+    "id": "sh_Reverse_fly",
+    "name_ar": "رفرفة خلفية",
+    "muscle": "كتف",
+    "level": "مبتدئ",
+    "equipment": ["جهاز"],
+    "cues_ar": ["ادفع الوزن الى الخلف ليصبح موازيا لعضلة الكتف", , "تحكم"],
+    "alternatives_ar": ["Dumbbell rear delt flys"]  
+    "video": "https://youtube.com/shorts/Lmvo5MK5MLs?si=MqJjl8sPLIVgLWeK",
+  "alt_video": "https://www.youtube.com/shorts/-YmHYK_fce8"
+  },
+   {
+    "id": "sh_shrug_dumbbell",
+    "name_ar": "دامبل ترابيس",
+    "muscle": "كتف",
     "level": "مبتدئ",
     "equipment": ["دامبل"],
+    "cues_ar": ["شد جسمك بوقوف ثابت", "اسحب الدامبل بالرقبة"],
+    "alternatives_ar": ["Cable Bent Shrug"]  
+    "video": "https://youtube.com/shorts/9P2gZSCMy9Q?si=J_0o1gMIPsrrzzbf",
+  "alt_video": "https://youtu.be/nOn_Bz0zrwQ?si=Sw_AqPrahxRkaNM2"
+  },
+  {
+    "id": "ar_curl_M",
+    "name_ar": "بايسبس كيرل",
+    "muscle": "ذراع",
+    "level": "مبتدئ",
+    "equipment": ["جهاز"],
     "cues_ar": ["مرفق ثابت", "صعود بتحكم", "نزول أبطأ"],
-    "alternatives_ar": ["EZ Bar Curl", "Cable Curl"]
+    "alternatives_ar": ["EZ Bar Curl"]
+    "video": "https://youtu.be/u6fc-b5wYF4?si=g-pDVDWeBKyAcliw",
+  "alt_video": "https://youtu.be/zG2xJ0Q5QtI?si=9v4wtkbUUJw7C9h_"
+  },
+   {
+    "id": "ar_curl_Hummer",
+    "name_ar": "بايسبس همر",
+    "muscle": "ذراع",
+    "level": "مبتدئ",
+    "equipment": ["كيبل"],
+    "cues_ar": ["مرفق ثابت", "صعود بتحكم", "نزول أبطأ"],
+    "alternatives_ar": ["Dumbbell Hummer"]
+    "video": "https://youtu.be/h_0PPEN6pJU?si=Y1U2AOufrbDD1caQ",
+  "alt_video": "https://youtube.com/shorts/g4DKPitewK0?si=a9Ogi4QNvHOncVKQ"
   },
   {
     "id": "ar_triceps_pushdown",
@@ -176,7 +248,9 @@
     "level": "مبتدئ",
     "equipment": ["كبل"],
     "cues_ar": ["مرفق ملاصق للجسم", "مدّ كامل بدون قفل قوي"],
-    "alternatives_ar": ["Overhead Triceps Extension", "Bench Dips"]
+    "alternatives_ar": ["Overhead Triceps Extension"]
+     "video": "https://youtu.be/LXkCrxn3caQ?si=J_je-o_lBMjJbSJM",
+  "alt_video": "https://youtu.be/1u18yJELsh0?si=5ueTee3ZXIab_GA5"
   },
   {
     "id": "core_plank",
