@@ -253,21 +253,47 @@
   "alt_video": "https://youtu.be/1u18yJELsh0?si=5ueTee3ZXIab_GA5"
   },
   {
+    "id": "ar_triceps_dip",
+    "name_ar": "ترايسبس ديبس",
+    "muscle": "ذراع",
+    "level": "مبتدئ",
+    "equipment": ["آلة"],
+    "cues_ar": [" ادفع الوزن بتحكم ", "مدّ كامل بدون قفل قوي"],
+    "alternatives_ar": ["Overhead Triceps Dumbbell"]
+     "video": "https://youtu.be/0yCp0RhauGI?si=owGifC_-ZOtO56sR",
+  "alt_video": "https://youtube.com/shorts/T3e390Dl3XU?si=0bZG4n6iMXi2_5VD"
+  },
+   {
+    "id": "ar_forarm_bar",
+    "name_ar": "سواعد",
+    "muscle": "ذراع",
+    "level": "مبتدئ",
+    "equipment": ["بار"],
+    "cues_ar": [" اقبض الوزن بتحكم ", "مدّ كامل"],
+    "alternatives_ar": ["Wrist cable curl"]
+     "video": "https://youtu.be/9sZlJZ41Lm8?si=T646WeDCIxl_8kBf",
+  "alt_video": "https://youtube.com/shorts/Aku7aRkY5BU?si=W4ZOnYnWh2PQNlgR"
+  },
+  {
     "id": "core_plank",
     "name_ar": "بلانك",
     "muscle": "كور",
     "level": "مبتدئ",
     "equipment": ["وزن جسم"],
     "cues_ar": ["حوض محايد", "كتف فوق الكوع", "نَفَس هادئ"],
-    "alternatives_ar": ["Side Plank", "Dead Bug"]
+    "alternatives_ar": ["Dead Bug"]
+    "video": "https://youtu.be/9sZlJZ41Lm8?si=T646WeDCIxl_8kBf",
+  "alt_video": "https://youtube.com/shorts/DqLL45uk2Tk?si=l7_DYn5HJLz9Gjc8"
   },
   {
-    "id": "core_dead_bug",
-    "name_ar": "ديد بق",
+    "id": "core_crunch_mchine",
+    "name_ar": "كرنش",
     "muscle": "كور",
     "level": "مبتدئ",
-    "equipment": ["وزن جسم"],
-    "cues_ar": ["أسفل ظهر ملاصق للأرض", "حركة بطيئة"],
-    "alternatives_ar": ["Plank", "Bird Dog"]
+    "equipment": ["جهاز"],
+    "cues_ar": ["أسفل ظهر ملاصق للجهاز", "حركة بطيئة"],
+    "alternatives_ar": ["Decline crunch"]
+    "video": "https://youtube.com/shorts/vBhXL83WbII?si=erfT9KFddO_Iq0X9",
+  "alt_video": "https://youtube.com/shorts/z1xg7mav8zY?si=bX8sjcLSLJhns9wG"
   }
 ]
