@@ -24,26 +24,63 @@ function searchExercises(query, k = 5){
     .slice(0, k)
     .map(x => x.ex);
 }
-
-function buildContext(userMsg){
-  const top = searchExercises(userMsg, 5);
-if (!top.length || userMsg.includes("يوتيوب")) {
-  const query = encodeURIComponent(userMsg.replace("اقترح", "").replace("من اليوتيوب", "").trim() + " تمرين");
-  const yt = `https://www.youtube.com/results?search_query=${query}`;
-  return `🎥 هذي نتائج بحث من يوتيوب عن "${userMsg}" 👇\n${yt}`;
+function ytSearchLink(text) {
+  const cleaned = text
+    .replace(/اقترح/gi, "")
+    .replace(/من اليوتيوب/gi, "")
+    .replace(/رابط/gi, "")
+    .replace(/يوتيوب/gi, "")
+    .trim();
+  const q = encodeURIComponent((cleaned || text) + " تمرين");
+  return `https://www.youtube.com/results?search_query=${q}`;
 }
+
+function buildContext(userMsg) {
+  // 1) كشف نية طلب روابط يوتيوب
+  const ytIntent =
+    /(يوتيوب|رابط|فيديو|شاهد|لينك).*(تمرين|تمارين|صدر|بطن|كتف|ظهر|ساق|كارديو|كارديو)|(?:اقترح|ابحث).*(يوتيوب|رابط|فيديو)/i;
+
+  if (ytIntent.test(userMsg)) {
+    // تنظيف النص وصياغة استعلام يوتيوب
+    const cleaned = userMsg
+      .replace(/[^\p{L}\p{N}\s]+/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // نوجه البحث ليوتيوب + نضيف كلمات مساعدة
+    const query = encodeURIComponent(`site:youtube.com ${cleaned} تمرين شرح عربي`);
+    const yt = `https://www.youtube.com/results?search_query=${query}`;
+
+    return (
+      `🔎 هذا بحث يوتيوب جاهز حسب طلبك:\n${yt}\n` +
+      `- نصيحة: جرّب أول 3–5 نتائج وشوف الأنسب لك.\n\n` +
+      `إذا تبغى اقتراحات مفصلة من قاعدة تمارين المتجر، اكتب اسم التمرين فقط (بدون كلمة يوتيوب).`
+    );
+  }
+
+  // 2) الوضع الافتراضي: نستخدم قاعدة التمارين
+  const top = searchExercises(userMsg, 5);
+  if (!top.length) return "";
+
   const lines = top.map((ex, i) => {
     const vids = [ex.video, ...(ex.alt_videos || [])].filter(Boolean);
-    const vidsLine = vids.length ? `روابط: ${vids.join(" , ")}` : "روابط: لا يوجد";
+    const vidsLine = vids.length ? `روابط: ${vids.join(" ، ")}` : "روابط: لا يوجد";
+
     return (
-      `#${i+1} ${ex.name_ar} — عضلة: ${ex.muscle} — مستوى: ${ex.level}\n` +
-      `الملاحظات: ${(ex.cues_ar||[]).join("، ")}\n` +
-      `بدائل: ${(ex.alternatives_ar||[]).join("، ")}\n` +
+      `${i + 1}. ${ex.name_ar} – عضلة: ${ex.muscle} • مستوى: ${ex.level}\n` +
+      `ملاحظات: ${(ex.cues_ar || []).join(" ، ")}\n` +
+      `بدائل: ${(ex.alternatives_ar || []).join(" ، ")}\n` +
       `${vidsLine}`
     );
   }).join("\n\n");
-  return `\n[سياق تمارين من قاعدة Fitness Factory]\n${lines}\n[انتهى السياق]\n`;
+
+  return (
+    `سأقترح تمارين من قاعدة Fitness Factory:\n` +
+    `${lines}\n\n` +
+    `إذا تحتاج روابط يوتيوب مباشرة اكتب: "يوتيوب + اسم التمرين".`
+  );
 }
+
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Only POST" });
