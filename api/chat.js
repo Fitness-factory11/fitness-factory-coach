@@ -27,9 +27,10 @@ function searchExercises(query, k = 5){
 
 function buildContext(userMsg){
   const top = searchExercises(userMsg, 5);
-  if (!top.length) {
-  const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(userMsg + " تمرين")}`;
-  return `🔎 ما لقيت تمرين مطابق في القاعدة الآن.\nجرّب هذا البحث في يوتيوب: ${yt}`;
+if (!top.length || userMsg.includes("يوتيوب")) {
+  const query = encodeURIComponent(userMsg.replace("اقترح", "").replace("من اليوتيوب", "").trim() + " تمرين");
+  const yt = `https://www.youtube.com/results?search_query=${query}`;
+  return `🎥 هذي نتائج بحث من يوتيوب عن "${userMsg}" 👇\n${yt}`;
 }
   const lines = top.map((ex, i) => {
     const vids = [ex.video, ...(ex.alt_videos || [])].filter(Boolean);
