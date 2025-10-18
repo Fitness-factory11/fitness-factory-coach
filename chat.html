@@ -58,6 +58,24 @@
       color:#bdbdbd; font-size:12px; margin:0 6px 6px 0; cursor:pointer;
     }
     .pill:hover{border-color:#3a3a3a; color:#fff}
+    .msg {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.msg a {
+  color: #f5b301;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+.msg a:hover {
+  opacity: .9;
+  text-decoration: none;
+}
   </style>
 </head>
 <body>
@@ -117,16 +135,15 @@
 
   // استخدم هذه الدالة لإضافة فقاعة رسالة
   function addMessage(role, text) {
-    const wrap = document.querySelector('.chat');   // عدّل حسب حاوية الشات عندك
-    const msg  = document.createElement('div');
-    msg.className = role === 'user' ? 'msg user' : 'msg bot';
+  const chat = document.querySelector('.chat');
+  const msg = document.createElement('div');
+  msg.className = role === 'user' ? 'msg user' : 'msg bot';
 
-    // نحافظ على السطور + نفعّل الروابط
-    const safe = escapeHTML(text).replace(/\r?\n/g, '<br>');
-    msg.innerHTML = linkify(safe);
+  msg.innerHTML = linkify(escapeHTML(text)); // ← هذا السطر هو المهم
 
-    wrap.appendChild(msg);
-    wrap.scrollTop = wrap.scrollHeight;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
   }
 </script>
 
@@ -172,5 +189,6 @@
 
 </body>
 </html>
+
 
 
