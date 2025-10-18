@@ -192,9 +192,7 @@
       send.classList.remove('loading');
     }
   }
-
-  // ربط الأحداث
- // ربط الأحداث (آمن ويضمن منع السلوك الافتراضي)
+// ربط الأحداث (أمن وبمنع فتح الروابط الإفتراضي)
 function bindEvents() {
   if (!send || !q) return;
 
@@ -204,7 +202,7 @@ function bindEvents() {
     handleSend();
   }, { passive: false });
 
-  // زر Enter في خانة الإدخال
+  // في حقل الإدخال عند الضغط على Enter
   q.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -213,15 +211,17 @@ function bindEvents() {
   }, { passive: false });
 }
 
-// اربط بعد جاهزية الصفحة (أو فورًا لو الـDOM جاهز)
+// جاهز DOM؟ (لو لسه) اربط بعد جاهزية الصفحة
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', bindEvents);
 } else {
   bindEvents();
 }
+
 </script>
 </body>
 </html>
+
 
 
 
