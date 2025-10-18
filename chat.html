@@ -102,7 +102,8 @@
 
       <div class="input">
         <input id="q" type="text" placeholder="اكتب سؤالك هنا…" />
-        <button id="send">إرسال</button>
+        <button id="send" type="button">إرسال</button>
+
       </div>
     </div>
     <div class="subtle">ملاحظة: هذه نسخة للواجهة فقط. قريباً نربطها بـ API.</div>
@@ -110,7 +111,7 @@
 
    <script>
   // عناصر الواجهة
-  const log  = document.getElementById('chat');
+ const chat = document.getElementById('chat');
   const q    = document.getElementById('q');
   const send = document.getElementById('send');
 
@@ -145,82 +146,108 @@
   chat.scrollTop = chat.scrollHeight;
 }
   }
-
 <script>
-  // عناصر الواجهة
-const log = document.getElementById('chat');
-const q = document.getElementById('q');
+// ------------- أدوات بسيطة -------------
+function escapeHTML(s){
+  return s.replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+}
+
+// تحويل أي رابط لنص قابل للنقر يفتح في تبويب جديد
+function linkify(html){
+  // صيغتان: [نص](https://..)  و  https://..
+  html = html.replace(/\[([^\]]+)\]\(((https?:\/\/[^\s)]+))\)/g,
+    `<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>`);
+  html = html.replace(/(https?:\/\/[^\s<]+)/g,
+    `<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>`);
+  return html;
+}
+
+// ------------- مراجع العناصر -------------
+const chat = document.getElementById('chat');
+const q    = document.getElementById('q');
 const send = document.getElementById('send');
 
-  // دوال المساعدة (linkify, escapeHTML ...الخ)
+// ------------- طباعة رسالة -------------
+function addMessage(role, text){
+  const msg = document.createElement('div');
+  msg.className = role === 'user' ? 'msg user' : 'msg bot';
+  msg.innerHTML = linkify(escapeHTML(text));
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
 
-  // دالة إضافة الرسائل
-  function addMessage(role, text) {
-    const chat = document.querySelector('.chat');
-    const msg = document.createElement('div');
-    msg.className = role === 'user' ? 'msg user' : 'msg bot';
-    msg.innerHTML = linkify(escapeHTML(text));
-    chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight;
-  }
+// ------------- الإرسال الحقيقي لـ /api/chat -------------
+async function handleSend(){
+  const text = q.value.trim();
+  if (!text) return;
 
-  // أزرار جاهزة سريعة
-  function quick(text){ q.value = text; q.focus(); }
+  // اطبع رسالة المستخدم
+  addMessage('user', text);
+  q.value = '';
 
-  // الإرسال الحقيقي
-  async function handleSend(){
-    const text = q.value.trim();
-    if(!text) return;
-    addMessage('user', text);
-    q.value = '';
-    send.classList.add('loading');
-    try{
-      const r = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
-      const d = await r.json();
-      if(!r.ok || d.error || !d.reply){
-        addMessage('bot', '⚠️ ما لقيت رد مناسب.');
-      }else{
-        addMessage('bot', d.reply);
-      }
-    }catch(e){
-      addMessage('bot', '📶 صار خلل بسيط بالاتصال، حاول مجددًا.');
-    }finally{
-      send.classList.remove('loading');
+  // لو عالق اتصال/زر مضغوط — نمنع تعدد الإرسال
+  if (send.classList.contains('loading')) return;
+  send.classList.add('loading');
+
+  try{
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: text })
+    });
+
+    if (!r.ok){
+      // حاول نقرأ خطأ السيرفر
+      let err = `تعذر الإرسال (HTTP ${r.status})`;
+      try{
+        const d = await r.json();
+        if (d && d.error) err = d.error;
+      }catch{}
+      addMessage('bot', `⚠️ ما قدرت أجيب رد الآن.\n${err}`);
+      return;
     }
+
+    const data = await r.json();
+    addMessage('bot', data.reply || '⚠️ ما لقيت رد مناسب الآن');
+
+  }catch(e){
+    console.error(e);
+    addMessage('bot', '⚠️ صار خلل بسيط بالاتصال. جرّب ثانية 🙏');
+  }finally{
+    send.classList.remove('loading');
+    q.focus();
   }
-// ربط الأحداث (أمن وبمنع فتح الروابط الإفتراضي)
-function bindEvents() {
+}
+
+// ------------- ربط الأحداث -------------
+function bindEvents(){
   if (!send || !q) return;
 
-  // زر "إرسال"
-  send.addEventListener('click', (e) => {
+  // زر الإرسال
+  send.addEventListener('click', (e)=>{
     e.preventDefault();
     handleSend();
-  }, { passive: false });
+  }, { passive:false });
 
-  // في حقل الإدخال عند الضغط على Enter
-  q.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+  // إنتر من حقل النص
+  q.addEventListener('keydown', (e)=>{
+    if (e.key === 'Enter'){
       e.preventDefault();
       handleSend();
     }
-  }, { passive: false });
+  }, { passive:false });
 }
 
-// جاهز DOM؟ (لو لسه) اربط بعد جاهزية الصفحة
-if (document.readyState === 'loading') {
+// اربط بعد جاهزية الصفحة
+if (document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', bindEvents);
-} else {
+}else{
   bindEvents();
 }
-
 </script>
 </body>
 </html>
+
 
 
 
