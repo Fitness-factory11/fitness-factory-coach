@@ -194,14 +194,35 @@
   }
 
   // ربط الأحداث
-  send.onclick = handleSend;
-  q.addEventListener('keydown', e => {
-    if (e.key === 'Enter') handleSend();
-  });
-</script>
+ // ربط الأحداث (آمن ويضمن منع السلوك الافتراضي)
+function bindEvents() {
+  if (!send || !q) return;
 
+  // زر "إرسال"
+  send.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleSend();
+  }, { passive: false });
+
+  // زر Enter في خانة الإدخال
+  q.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSend();
+    }
+  }, { passive: false });
+}
+
+// اربط بعد جاهزية الصفحة (أو فورًا لو الـDOM جاهز)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bindEvents);
+} else {
+  bindEvents();
+}
+</script>
 </body>
 </html>
+
 
 
 
