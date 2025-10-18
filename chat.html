@@ -108,14 +108,20 @@
     </div>
     <div class="subtle">ملاحظة: هذه نسخة للواجهة فقط. قريباً نربطها بـ API.</div>
   </div>
+<script>
+// عناصر الواجهة
+const chat = document.getElementById('chat');
+const q = document.getElementById('q');
+const send = document.getElementById('send');
 
-   <script>
-  // عناصر الواجهة
- const chat = document.getElementById('chat');
-  const q    = document.getElementById('q');
-  const send = document.getElementById('send');
+// دالة الأزرار السريعة
+function quick(text) {
+  q.value = text;
+  q.focus();
+}
+</script>
 
- <script>
+<script>
   // تهريب HTML (أمان)
   function escapeHTML(s) {
     return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -146,6 +152,7 @@
   chat.scrollTop = chat.scrollHeight;
 }
   }
+</script>
 <script>
 // ------------- أدوات بسيطة -------------
 function escapeHTML(s){
@@ -247,6 +254,7 @@ if (document.readyState === 'loading'){
 </script>
 </body>
 </html>
+
 
 
 
