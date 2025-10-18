@@ -145,50 +145,64 @@
   chat.scrollTop = chat.scrollHeight;
 }
   }
-</script>
+
+<script>
+  // عناصر الواجهة
+  const log = document.getElementById('chat');
+  const q = document.getElementById('q');
+  const send = document.getElementById('send');
+
+  // دوال المساعدة (linkify, escapeHTML ...الخ)
+
+  // دالة إضافة الرسائل
+  function addMessage(role, text) {
+    const chat = document.querySelector('.chat');
+    const msg = document.createElement('div');
+    msg.className = role === 'user' ? 'msg user' : 'msg bot';
+    msg.innerHTML = linkify(escapeHTML(text));
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
   // أزرار جاهزة سريعة
   function quick(text){ q.value = text; q.focus(); }
 
-  // الإرسال الحقيقي للـ API
+  // الإرسال الحقيقي
   async function handleSend(){
-    const text = q.value.trim(); if(!text) return;
-
-    add('user', text);
+    const text = q.value.trim();
+    if(!text) return;
+    addMessage('user', text);
     q.value = '';
-    send.classList.add('loading');   // تعطيل الزر مؤقتًا
-
-    try {
+    send.classList.add('loading');
+    try{
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text })
       });
-
-      if (!r.ok) {
-        let err = 'تعذر الرد حاليًا. جرّب بعد لحظات 🙏';
-        try { const d = await r.json(); if (d?.error) err = err + ` (${d.error})`; } catch {}
-        add('bot', err);
-        return;
+      const d = await r.json();
+      if(!r.ok || d.error || !d.reply){
+        addMessage('bot', '⚠️ ما لقيت رد مناسب.');
+      }else{
+        addMessage('bot', d.reply);
       }
-
-      const data = await r.json();
-      add('bot', data.reply || 'ما لقيت رد مناسب الآن 🙏');
-    } catch (e) {
-      console.error(e);
-      add('bot', 'صار خلل بسيط بالاتصال. تأكد من الشبكة وحاول مجددًا 🙏');
-    } finally {
+    }catch(e){
+      addMessage('bot', '📶 صار خلل بسيط بالاتصال، حاول مجددًا.');
+    }finally{
       send.classList.remove('loading');
     }
   }
 
   // ربط الأحداث
   send.onclick = handleSend;
-  q.addEventListener('keydown', e => { if (e.key === 'Enter') handleSend(); });
+  q.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSend();
+  });
 </script>
 
 </body>
 </html>
+
 
 
 
