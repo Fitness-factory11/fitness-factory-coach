@@ -108,153 +108,94 @@
     </div>
     <div class="subtle">ملاحظة: هذه نسخة للواجهة فقط. قريباً نربطها بـ API.</div>
   </div>
-<script>
-// عناصر الواجهة
-const chat = document.getElementById('chat');
-const q = document.getElementById('q');
-const send = document.getElementById('send');
-
-// دالة الأزرار السريعة
-function quick(text) {
-  q.value = text;
-  q.focus();
-}
-</script>
+<!-- اترك ما قبل هذا كما هو (الهيدر + الـ HTML والإنبوت والزر) -->
 
 <script>
-  // تهريب HTML (أمان)
-  function escapeHTML(s) {
-    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
+  // عناصر الواجهة + دالة الأزرار السريعة (quick) للـ pills
+  const chat = document.getElementById('chat');
+  const q    = document.getElementById('q');
+  const send = document.getElementById('send');
 
-  // تحويل الروابط لنص قابل للنقر (يدعم http/https و Markdown [نص](رابط))
-  function linkify(html) {
-    // [نص](رابط)
-    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-
-    // رابط عادي
-    html = html.replace(/(https?:\/\/[^\s<>()]+)(?=\s|$)/g,
-      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-
-    return html;
-  }
-
-  // استخدم هذه الدالة لإضافة فقاعة رسالة
-  function addMessage(role, text) {
-  const chat = document.querySelector('.chat');
-  const msg = document.createElement('div');
-  msg.className = role === 'user' ? 'msg user' : 'msg bot';
-
-  msg.innerHTML = linkify(escapeHTML(text)); // ← هذا السطر هو المهم
-
-  chat.appendChild(msg);
-  chat.scrollTop = chat.scrollHeight;
-}
-  }
-</script>
-<script>
-// ------------- أدوات بسيطة -------------
-function escapeHTML(s){
-  return s.replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
-}
-
-// تحويل أي رابط لنص قابل للنقر يفتح في تبويب جديد
-function linkify(html){
-  // صيغتان: [نص](https://..)  و  https://..
-  html = html.replace(/\[([^\]]+)\]\(((https?:\/\/[^\s)]+))\)/g,
-    `<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>`);
-  html = html.replace(/(https?:\/\/[^\s<]+)/g,
-    `<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>`);
-  return html;
-}
-
-// ------------- مراجع العناصر -------------
-const chat = document.getElementById('chat');
-const q    = document.getElementById('q');
-const send = document.getElementById('send');
-
-// ------------- طباعة رسالة -------------
-function addMessage(role, text){
-  const msg = document.createElement('div');
-  msg.className = role === 'user' ? 'msg user' : 'msg bot';
-  msg.innerHTML = linkify(escapeHTML(text));
-  chat.appendChild(msg);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-// ------------- الإرسال الحقيقي لـ /api/chat -------------
-async function handleSend(){
-  const text = q.value.trim();
-  if (!text) return;
-
-  // اطبع رسالة المستخدم
-  addMessage('user', text);
-  q.value = '';
-
-  // لو عالق اتصال/زر مضغوط — نمنع تعدد الإرسال
-  if (send.classList.contains('loading')) return;
-  send.classList.add('loading');
-
-  try{
-    const r = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ message: text })
-    });
-
-    if (!r.ok){
-      // حاول نقرأ خطأ السيرفر
-      let err = `تعذر الإرسال (HTTP ${r.status})`;
-      try{
-        const d = await r.json();
-        if (d && d.error) err = d.error;
-      }catch{}
-      addMessage('bot', `⚠️ ما قدرت أجيب رد الآن.\n${err}`);
-      return;
-    }
-
-    const data = await r.json();
-    addMessage('bot', data.reply || '⚠️ ما لقيت رد مناسب الآن');
-
-  }catch(e){
-    console.error(e);
-    addMessage('bot', '⚠️ صار خلل بسيط بالاتصال. جرّب ثانية 🙏');
-  }finally{
-    send.classList.remove('loading');
+  function quick(text) {
+    q.value = text;
     q.focus();
   }
-}
+</script>
 
-// ------------- ربط الأحداث -------------
-function bindEvents(){
-  if (!send || !q) return;
+<script>
+  // تهريب HTML
+  function escapeHTML(s) {
+    return s.replace(/[&<>"']/g, m => (
+      {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
+    ));
+  }
 
-  // زر الإرسال
-  send.addEventListener('click', (e)=>{
-    e.preventDefault();
-    handleSend();
-  }, { passive:false });
+  // تحويل الروابط إلى روابط قابلة للنقر
+  function linkify(html) {
+    return html.replace(/(\bhttps?:\/\/[^\s]+)/g,
+      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  }
 
-  // إنتر من حقل النص
-  q.addEventListener('keydown', (e)=>{
-    if (e.key === 'Enter'){
+  // إضافة رسالة للمحادثة
+  function addMessage(role, text) {
+    const msg = document.createElement('div');
+    msg.className = role === 'user' ? 'msg user' : 'msg bot';
+    msg.innerHTML = linkify(escapeHTML(text));
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+</script>
+
+<script>
+  // إرسال الرسالة وربط الأحداث
+  async function handleSend() {
+    const text = q.value.trim();
+    if (!text) return;
+
+    addMessage('user', text);
+    q.value = '';
+    send.classList.add('loading');
+
+    try {
+      const r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await r.json();
+      addMessage('bot', data.reply || '🤖 ما لقيت رد مناسب الآن.');
+    } catch (e) {
+      addMessage('bot', '⚠️ صار خطأ بسيط بالاتصال، حاول مجدداً 🙏');
+      console.error(e);
+    } finally {
+      send.classList.remove('loading');
+    }
+  }
+
+  function bindEvents() {
+    if (!send || !q) return;
+    send.addEventListener('click', (e) => {
       e.preventDefault();
       handleSend();
-    }
-  }, { passive:false });
-}
+    });
+    q.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+  }
 
-// اربط بعد جاهزية الصفحة
-if (document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', bindEvents);
-}else{
-  bindEvents();
-}
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindEvents);
+  } else {
+    bindEvents();
+  }
 </script>
+
 </body>
 </html>
-
 
 
 
