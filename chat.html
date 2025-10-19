@@ -15,17 +15,12 @@
       display:flex; min-height:100vh; align-items:center; justify-content:center; padding:16px;
     }
     .wrap{width:100%; max-width:780px}
-    .top{
-      display:flex; align-items:center; gap:12px; margin-bottom:12px;
-    }
+    .top{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
     .logo{
       width:42px; height:42px; border-radius:12px; background:#1a1a1a;
       display:grid; place-items:center; border:1px solid #222;
     }
-    .loading{opacity:.7;pointer-events:none}
-    .logo:before{
-      content:"🏋️"; filter:grayscale(0); font-size:22px;
-    }
+    .logo:before{ content:"🏋️"; font-size:22px; }
     .brand h1{margin:0; font-size:20px; color:var(--brand); letter-spacing:.5px}
     .brand p{margin:0; color:var(--muted); font-size:13px}
     .card{
@@ -34,15 +29,12 @@
     }
     .chat{
       height:60vh; min-height:420px; max-height:70vh; overflow:auto; padding:16px;
-      display:flex; flex-direction:column; gap:10px;
-      scroll-behavior:smooth;
+      display:flex; flex-direction:column; gap:10px; scroll-behavior:smooth;
     }
     .msg{max-width:84%; padding:10px 12px; border-radius:14px; line-height:1.55; font-size:14.5px;}
     .user{align-self:flex-start; background:#1b1b1b; border:1px solid #2a2a2a;}
     .bot{align-self:flex-end; background:var(--brand); color:#1a1a1a; font-weight:600;}
-    .input{
-      display:flex; gap:8px; padding:12px; border-top:1px solid #1f1f1f; background:#141414;
-    }
+    .input{ display:flex; gap:8px; padding:12px; border-top:1px solid #1f1f1f; background:#141414; }
     input[type="text"]{
       flex:1; background:#0f0f0f; border:1px solid #252525; color:var(--text);
       padding:12px 14px; border-radius:12px; outline:none; font-size:14px;
@@ -58,36 +50,24 @@
       color:#bdbdbd; font-size:12px; margin:0 6px 6px 0; cursor:pointer;
     }
     .pill:hover{border-color:#3a3a3a; color:#fff}
-    .msg {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.6;
-}
 
-.msg a {
-  color: #f5b301;
-  font-weight: 600;
-  text-decoration: underline;
-  transition: 0.2s ease;
-  cursor: pointer;
-}
-.msg a:hover {
-  opacity: .9;
-  text-decoration: none;
-}
-  /* روابط داخل فقاعات الرسائل */
-.msg a {
-  color: #4da3ff;         /* لون أزرق واضح */
-  text-decoration: underline;
-  font-weight: 600;
-  word-break: break-all;  /* لو الرابط طويل ما يكسر التنسيق */
-}
-
-.msg a:hover {
-  opacity: .9;
-  text-decoration: none;
-}
+    /* تنسيق الفقاعات والروابط داخلها */
+    .msg{
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.6;
+    }
+    .msg a{
+      color:#4da3ff;               /* أزرق واضح */
+      text-decoration: underline;
+      font-weight:600;
+      transition:.2s ease;
+      cursor:pointer;
+      word-break: break-all;       /* لو الرابط طويل */
+    }
+    .msg a:hover{ opacity:.9; text-decoration:none; }
+    .loading{opacity:.7; pointer-events:none}
   </style>
 </head>
 <body>
@@ -103,7 +83,7 @@
     <div class="card">
       <div id="chat" class="chat">
         <div class="msg bot">هلا فيك! أنا مدربك الذكي في Fitness Factory 💪
-        اكتب سؤالك عن التمارين، البدائل، أو السعرات. (نسخة تجريبية)</div>
+اكتب سؤالك عن التمارين، البدائل، أو السعرات. (نسخة تجريبية)</div>
       </div>
 
       <div style="padding:10px 12px;">
@@ -115,114 +95,99 @@
       <div class="input">
         <input id="q" type="text" placeholder="اكتب سؤالك هنا…" />
         <button id="send" type="button">إرسال</button>
-
       </div>
     </div>
     <div class="subtle">ملاحظة: هذه نسخة للواجهة فقط. قريباً نربطها بـ API.</div>
   </div>
-<!-- اترك ما قبل هذا كما هو (الهيدر + الـ HTML والإنبوت والزر) -->
 
-<script>
-  // عناصر الواجهة + دالة الأزرار السريعة (quick) للـ pills
-  const chat = document.getElementById('chat');
-  const q    = document.getElementById('q');
-  const send = document.getElementById('send');
+  <!-- عناصر الواجهة + أزرار سريعة -->
+  <script>
+    const chat = document.getElementById('chat');
+    const q    = document.getElementById('q');
+    const send = document.getElementById('send');
 
-  function quick(text) {
-    q.value = text;
-    q.focus();
-  }
-</script>
+    function quick(text){ q.value = text; q.focus(); }
+  </script>
 
-<script>
-  // تهريب HTML
-  function escapeHTML(s) {
-    return s.replace(/[&<>"']/g, m => (
-      {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
-    ));
-  }
+  <!-- أدوات تنسيق المحتوى -->
+  <script>
+    function escapeHTML(s){
+      return s.replace(/[&<>"']/g, m => (
+        ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])
+      ));
+    }
+    function linkify(html){
+      return html.replace(/(\bhttps?:\/\/[^\s]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+    }
+    function addMessage(role, text){
+      const msg = document.createElement('div');
+      msg.className = role === 'user' ? 'msg user' : 'msg bot';
+      msg.innerHTML = linkify(escapeHTML(text));
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
 
-  // تحويل الروابط إلى روابط قابلة للنقر
-  function linkify(html) {
-    return html.replace(/(\bhttps?:\/\/[^\s]+)/g,
-      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-  }
+  <!-- منطق الإرسال -->
+  <script>
+    async function handleSend(){
+      const text = q.value.trim();
+      if (!text) return;
 
-  // إضافة رسالة للمحادثة
-  function addMessage(role, text) {
-    const msg = document.createElement('div');
-    msg.className = role === 'user' ? 'msg user' : 'msg bot';
-    msg.innerHTML = linkify(escapeHTML(text));
-    chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight;
-  }
-</script>
+      addMessage('user', text);
+      q.value = '';
+      send.classList.add('loading');
 
-<script>
-  // إرسال الرسالة وربط الأحداث
-  async function handleSend() {
-    const text = q.value.trim();
-    if (!text) return;
+      try {
+        const r = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
 
-    addMessage('user', text);
-    q.value = '';
-    send.classList.add('loading');
+        const ct = r.headers.get('content-type') || '';
+        let data;
+        if (ct.includes('application/json')) {
+          data = await r.json();
+        } else {
+          const raw = await r.text();            // لو رجع نص (مثلاً خطأ HTML)
+          data = { ok:false, error:'non_json', raw };
+        }
 
-    try {
-    const r = await fetch('/api/chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ message: text })
-});
+        if (!r.ok || !data) {
+          addMessage('bot', '⚠️ صار خطأ بسيط بالاتصال، حاول مجددًا 🙏');
+          return;
+        }
 
-// تحقّق من نوع المحتوى قبل json()
-const ct = r.headers.get('content-type') || '';
-let data;
-if (ct.includes('application/json')) {
-  data = await r.json();
-} else {
-  const raw = await r.text();
-  data = { ok:false, error:'non_json', raw };
-}
+        addMessage('bot', data.reply || data.raw || '…');
+      } catch (e){
+        console.error(e);
+        addMessage('bot', '⚠️ صار خطأ بسيط بالاتصال، حاول مجددًا 🙏');
+      } finally {
+        send.classList.remove('loading');
+      }
+    }
 
-if (!r.ok || !data) {
-  add('bot', '⚠️ صار خطأ بسيط بالاتصال، حاول مجددًا 🙏');
-  return;
-}
-
-add('bot', data.reply || data.raw || '…');
-
-  function bindEvents() {
-    if (!send || !q) return;
-    send.addEventListener('click', (e) => {
-      e.preventDefault();
-      handleSend();
-    });
-    q.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+    function bindEvents(){
+      if (!send || !q) return;
+      send.addEventListener('click', (e) => {
         e.preventDefault();
         handleSend();
-      }
-    });
-  }
+      });
+      q.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter'){
+          e.preventDefault();
+          handleSend();
+        }
+      });
+    }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindEvents);
-  } else {
-    bindEvents();
-  }
-</script>
-
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', bindEvents);
+    } else {
+      bindEvents();
+    }
+  </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
