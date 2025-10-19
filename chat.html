@@ -169,21 +169,28 @@
     send.classList.add('loading');
 
     try {
-      const r = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
+    const r = await fetch('/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: text })
+});
 
-      const data = await r.json();
-      addMessage('bot', data.reply || '🤖 ما لقيت رد مناسب الآن.');
-    } catch (e) {
-      addMessage('bot', '⚠️ صار خطأ بسيط بالاتصال، حاول مجدداً 🙏');
-      console.error(e);
-    } finally {
-      send.classList.remove('loading');
-    }
-  }
+// تحقّق من نوع المحتوى قبل json()
+const ct = r.headers.get('content-type') || '';
+let data;
+if (ct.includes('application/json')) {
+  data = await r.json();
+} else {
+  const raw = await r.text();
+  data = { ok:false, error:'non_json', raw };
+}
+
+if (!r.ok || !data) {
+  add('bot', '⚠️ صار خطأ بسيط بالاتصال، حاول مجددًا 🙏');
+  return;
+}
+
+add('bot', data.reply || data.raw || '…');
 
   function bindEvents() {
     if (!send || !q) return;
@@ -208,6 +215,7 @@
 
 </body>
 </html>
+
 
 
 
