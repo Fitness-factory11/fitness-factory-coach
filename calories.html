@@ -48,6 +48,23 @@
     .muted{color:#bdbdbd; font-size:12px}
     .footer{color:#9d9d9d; font-size:12px; padding:12px 18px; border-top:1px solid var(--line)}
     @media (max-width:680px){ .grid{grid-template-columns:1fr} }
+    /* شريط الأيقونات الاجتماعية */
+.social-row{
+  display:flex; gap:10px; justify-content:center; align-items:center;
+  margin:18px 0 6px;
+}
+.social-btn{
+  width:42px; height:42px; border-radius:12px;
+  display:grid; place-items:center;
+  background:#151515; border:1px solid #232323;
+  color:#fff; text-decoration:none; transition:.2s;
+}
+.social-btn:hover{ transform:translateY(-2px); border-color:#3a3a3a; }
+.social-btn svg{ width:20px; height:20px; }
+.social-caption{
+  text-align:center; color:#9d9d9d; font-size:12px; margin-top:6px;
+}
+
   </style>
 </head>
 <body>
@@ -121,6 +138,42 @@
 <p style="color:#999; font-size:12px; text-align:center; margin-top:10px;">
 * الأرقام تقريبية وتُعد نقطة انطلاق- راقب وزنك وعدّل السعرات حسب استجابتك.
 </p>
+      <!-- روابط التواصل -->
+<div class="social-row">
+  <!-- Instagram -->
+  <a class="social-btn" href="https://instagram.com/fitnessfactory_11" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+    <!-- أيقونة SVG إنستجرام -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.5" cy="6.5" r="1.4" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+
+  <!-- TikTok -->
+  <a class="social-btn" href="https://www.tiktok.com/@fitness_factoty0" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14.5 3h2.2c.2 2 1.4 3.5 3.3 4v2.2c-1.4-.1-2.7-.6-3.8-1.4v6.6a6.8 6.8 0 1 1-6.8-6.8c.3 0 .6 0 .9.1v2.4c-.3-.1-.6-.1-.9-.1a4.4 4.4 0 1 0 4.4 4.4V3Z"/>
+    </svg>
+  </a>
+
+  <!-- واتساب -->
+  <a class="social-btn" href="https://wa.me/9665XXXXXXXX" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2a9 9 0 0 0-7.7 13.6L3 22l6.6-1.3A9 9 0 1 0 12 2Zm0 2a7 7 0 0 1 6.1 10.5l-.3.5a1 1 0 0 0-.1.8l.5 2-2-.4a1 1 0 0 0-.8.1l-.5.3A7 7 0 1 1 12 4Zm-3 4.7c.2-.3.4-.3.6-.3h.5c.2 0 .4 0 .6.5.2.6.6 1.5.7 1.6.1.2 0 .4 0 .5l-.3.5c-.1.2-.2.3 0 .6.2.3.8 1.3 1.8 2 .9.6 1.6.8 1.9.9.2 0 .4 0 .5-.2l.8-1c.2-.2.3-.2.5-.1l1.5.7c.3.2.4.2.5.3 0 .2 0 1.1-.6 1.8-.6.7-1.7 1-2.3 1s-1.2 0-2.6-.6a11 11 0 0 1-3.7-2.5 9.6 9.6 0 0 1-2.2-3.4c-.3-.8-.3-1.6-.3-2 0-.6.2-1.3.6-1.8Z"/>
+    </svg>
+  </a>
+
+  <!-- متجر -->
+  <a class="social-btn" href="https://fitnessfactory-sa.com" target="_blank" rel="noopener noreferrer" aria-label="Store">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 9h18l-1.2 11H4.2L3 9Zm1.5-4h15L21 9H3l1.5-4Zm5 6h4v7h-4v-7Z"/>
+    </svg>
+  </a>
+</div>
+
+<div class="social-caption">تابعنا واطلب جداولك الرياضية الآن ✨</div>
+
 
       <div class="footer">
         الصيغة: Mifflin–St Jeor. معاملات النشاط: 1–2 يوم = 1.375، 3–5 = 1.55، 6–7 = 1.725.
