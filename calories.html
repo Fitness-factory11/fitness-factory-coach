@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>حاسبة السعرات – Fitness Factory</title>
+  <style>
+    :root{
+      --bg:#0d0d0d; --card:#121212; --muted:#cfcfcf; --text:#fff; --brand:#F5B301; --line:#1f1f1f;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic","Tajawal",sans-serif;
+      display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px;
+    }
+    .wrap{width:100%; max-width:800px}
+    .top{display:flex; align-items:center; gap:12px; margin-bottom:16px}
+    .logo{width:42px; height:42px; border-radius:12px; background:#1a1a1a; border:1px solid #222; display:grid; place-items:center}
+    .logo:before{content:"🔥"; font-size:20px}
+    h1{margin:0; color:var(--brand); font-size:22px}
+    p.sub{margin:4px 0 0; color:var(--muted); font-size:13px}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+      box-shadow:0 10px 24px rgba(0,0,0,.35);
+    }
+    .content{padding:18px}
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    label{font-size:13px; color:#ddd; margin-bottom:6px; display:block}
+    input, select{
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid #252525; background:#0f0f0f; color:#fff; font-size:14px; outline:none;
+    }
+    .row{display:flex; gap:12px; align-items:center}
+    .row > *{flex:1}
+    .hint{color:#aaa; font-size:12px; margin-top:2px}
+    button{
+      background:var(--brand); color:#000; border:none; padding:12px 16px; border-radius:12px; font-weight:800; cursor:pointer; transition:.2s;
+    }
+    button:hover{filter:saturate(1.1) brightness(.98)}
+    .results{
+      margin-top:16px; border-top:1px solid var(--line); padding-top:16px; display:grid; grid-template-columns:1fr; gap:10px;
+    }
+    .res{
+      background:#141414; border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+    }
+    .res h3{margin:0 0 6px; font-size:15px; color:var(--brand)}
+    .res p{margin:0; color:#eaeaea; font-weight:700; font-size:18px}
+    .muted{color:#bdbdbd; font-size:12px}
+    .footer{color:#9d9d9d; font-size:12px; padding:12px 18px; border-top:1px solid var(--line)}
+    @media (max-width:680px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo"></div>
+      <div>
+        <h1>حاسبة السعرات الحرارية – Fitness Factory</h1>
+        <p class="sub">ادخل بياناتك واحصل على السعرات للحفاظ/الخسارة/الضخامة</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="content">
+        <div class="grid">
+          <div>
+            <label>الجنس</label>
+            <select id="gender">
+              <option value="male">ذكر</option>
+              <option value="female">أنثى</option>
+            </select>
+          </div>
+          <div>
+            <label>العمر (سنة)</label>
+            <input id="age" type="number" min="10" max="90" placeholder="مثال: 28">
+          </div>
+
+          <div>
+            <label>الطول (سم)</label>
+            <input id="height" type="number" min="120" max="230" placeholder="مثال: 175">
+          </div>
+          <div>
+            <label>الوزن (كجم)</label>
+            <input id="weight" type="number" min="30" max="250" step="0.1" placeholder="مثال: 80">
+          </div>
+
+          <div>
+            <label>عدد أيام التمرين بالأسبوع</label>
+            <select id="days">
+              <option value="1-2">1–2 يوم</option>
+              <option value="3-5">3–5 أيام</option>
+              <option value="6-7">6–7 أيام</option>
+            </select>
+            <div class="hint">نستخدم معامل نشاط تلقائي حسب اختيارك</div>
+          </div>
+
+          <div class="row">
+            <button id="calc">احسب السعرات</button>
+            <button id="reset" style="background:#2b2b2b; color:#fff">تفريغ</button>
+          </div>
+        </div>
+
+        <div id="out" class="results" style="display:none">
+          <div class="res">
+            <h3>سعرات الحفاظ (TDEE)</h3>
+            <p id="maint"></p>
+            <div class="muted">هذه السعرات اليومية التقريبية للحفاظ على الوزن.</div>
+          </div>
+          <div class="res">
+            <h3>سعرات خسارة الوزن</h3>
+            <p id="cut"></p>
+            <div class="muted">تقليل ~20% من الحفاظ. اضبط النسبة لاحقاً حسب الاستجابة.</div>
+          </div>
+          <div class="res">
+            <h3>سعرات الضخامة</h3>
+            <p id="bulk"></p>
+            <div class="muted">زيادة ~15% من الحفاظ. راقب زيادة الدهون وعدّل إذا لزم.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        الصيغة: Mifflin–St Jeor. معاملات النشاط: 1–2 يوم = 1.375، 3–5 = 1.55، 6–7 = 1.725.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const el = (id)=>document.getElementById(id);
+    const fmt = (n)=> Math.round(n).toLocaleString('ar-EG');
+
+    function activityFactor(days){
+      switch(days){
+        case '1-2': return 1.375;   // نشاط خفيف
+        case '3-5': return 1.55;    // نشاط متوسط
+        case '6-7': return 1.725;   // نشاط عالٍ
+        default:    return 1.375;
+      }
+    }
+
+    function bmrMifflin({gender, weight, height, age}){
+      // الوزن كجم، الطول سم
+      if (gender === 'male'){
+        return 10*weight + 6.25*height - 5*age + 5;
+      } else {
+        return 10*weight + 6.25*height - 5*age - 161;
+      }
+    }
+
+    function calc(){
+      const gender = el('gender').value;
+      const age    = Number(el('age').value);
+      const height = Number(el('height').value);
+      const weight = Number(el('weight').value);
+      const days   = el('days').value;
+
+      // تحقق سريع
+      if (!age || !height || !weight){
+        alert('رجاءً أدخل العمر والطول والوزن بشكل صحيح.');
+        return;
+      }
+
+      const bmr = bmrMifflin({gender, weight, height, age});
+      const tdee = bmr * activityFactor(days);
+
+      const cut  = tdee * 0.80;  // -20%
+      const bulk = tdee * 1.15;  // +15%
+
+      el('maint').textContent = fmt(tdee) + ' سعرة/يوم';
+      el('cut').textContent   = fmt(cut)  + ' سعرة/يوم';
+      el('bulk').textContent  = fmt(bulk) + ' سعرة/يوم';
+
+      el('out').style.display = 'grid';
+    }
+
+    el('calc').addEventListener('click', calc);
+    el('reset').addEventListener('click', ()=>{
+      ['age','height','weight'].forEach(id=> el(id).value='');
+      el('gender').value='male';
+      el('days').value='3-5';
+      el('out').style.display='none';
+    });
+  </script>
+</body>
+</html>
