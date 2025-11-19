@@ -1,240 +1,525 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>حاسبة السعرات – Fitness Factory</title>
-  <style>
-    :root{
-      --bg:#333333; --card:#121212; --muted:#cfcfcf; --text:#fff; --brand:#F5B301; --line:#1f1f1f;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic","Tajawal",sans-serif;
-      display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px;
-    }
-    .wrap{width:100%; max-width:800px}
-    .top{display:flex; align-items:center; gap:12px; margin-bottom:16px}
-    .logo{width:42px; height:42px; border-radius:12px; background:#1a1a1a; border:1px solid #222; display:grid; place-items:center}
-    .logo:before{content:"🔥"; font-size:20px}
-    h1{margin:0; color:var(--brand); font-size:22px}
-    p.sub{margin:4px 0 0; color:var(--muted); font-size:13px}
-    .card{
-      background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden;
-      box-shadow:0 10px 24px rgba(0,0,0,.35);
-    }
-    .content{padding:18px}
-    .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    label{font-size:13px; color:#ddd; margin-bottom:6px; display:block}
-    input, select{
-      width:100%; padding:12px 14px; border-radius:12px; border:1px solid #252525; background:#0f0f0f; color:#fff; font-size:14px; outline:none;
-    }
-    .row{display:flex; gap:12px; align-items:center}
-    .row > *{flex:1}
-    .hint{color:#aaa; font-size:12px; margin-top:2px}
-    button{
-      background:var(--brand); color:#000; border:none; padding:12px 16px; border-radius:12px; font-weight:800; cursor:pointer; transition:.2s;
-    }
-    button:hover{filter:saturate(1.1) brightness(.98)}
-    .results{
-      margin-top:16px; border-top:1px solid var(--line); padding-top:16px; display:grid; grid-template-columns:1fr; gap:10px;
-    }
-    .res{
-      background:#141414; border:1px solid var(--line); border-radius:12px; padding:12px 14px;
-    }
-    .res h3{margin:0 0 6px; font-size:15px; color:var(--brand)}
-    .res p{margin:0; color:#eaeaea; font-weight:700; font-size:18px}
-    .muted{color:#bdbdbd; font-size:12px}
-    .footer{color:#9d9d9d; font-size:12px; padding:12px 18px; border-top:1px solid var(--line)}
-    @media (max-width:680px){ .grid{grid-template-columns:1fr} }
-    /* شريط الأيقونات الاجتماعية */
-.social-row{
-  display:flex; gap:10px; justify-content:center; align-items:center;
-  margin:18px 0 6px;
-}
-.social-btn{
-  width:42px; height:42px; border-radius:12px;
-  display:grid; place-items:center;
-  background:#151515; border:1px solid #232323;
-  color:#fff; text-decoration:none; transition:.2s;
-}
-.social-btn:hover{ transform:translateY(-2px); border-color:#3a3a3a; }
-.social-btn svg{ width:20px; height:20px; }
-.social-caption{
-  text-align:center; color:#9d9d9d; font-size:12px; margin-top:6px;
-}
+  <meta charset="UTF-8" />
+  <title>Fitness Factory – حاسبة السعرات الحرارية</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <style>
+    :root {
+      --bg: #05070b;
+      --card: #0c1017;
+      --card-soft: #101622;
+      --border: #151b27;
+      --text: #ffffff;
+      --muted: #b6c0d4;
+      --blue: #007aff;
+      --green: #00ff87;
+      --danger: #ff4d4f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Arabic", "Tajawal", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(3, 7, 18, 0.9);
+      border-radius: 24px;
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(0, 0, 0, 0.5);
+      padding: 24px 20px 20px;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(16px);
+    }
+
+    /* العنوان العلوي */
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: radial-gradient(circle at 20% 0%, var(--green) 0, var(--blue) 45%, #020617 100%);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo::before {
+      content: "F";
+      font-weight: 800;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      color: #020617;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.65);
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand h1 span {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .brand p {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* شبكة الإدخالات */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 10px 12px 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .field input,
+    .field select {
+      background: #050812;
+      border-radius: 10px;
+      border: 1px solid #1e2635;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.4);
+    }
+
+    .field small {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    /* سطر النشاط */
+    .activity-row {
+      margin-top: 14px;
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .activity-row label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .activity-row select {
+      min-width: 190px;
+      background: #050812;
+      border-radius: 10px;
+      border: 1px solid #1e2635;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .activity-row select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 1px rgba(0, 255, 135, 0.35);
+    }
+
+    /* أزرار */
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background-image: linear-gradient(135deg, var(--blue), var(--green));
+      color: #020617;
+      box-shadow: 0 12px 30px rgba(0, 122, 255, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(0, 122, 255, 0.6);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid #1f2937;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.75);
+      color: #e5e7eb;
+    }
+
+    /* كروت النتائج */
+    .results {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .card-result {
+      background: var(--card-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 14px 14px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-result::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.07;
+      background: radial-gradient(circle at 0 0, var(--blue), transparent 55%),
+                  radial-gradient(circle at 100% 100%, var(--green), transparent 60%);
+      pointer-events: none;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 14px;
+    }
+
+    .badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .main-number {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .main-number span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    .card-result p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .card-result.cut .main-number {
+      color: var(--danger);
+    }
+
+    .card-result.bulk .main-number {
+      color: var(--blue);
+    }
+
+    .note {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 11.5px;
+      color: #9ca3af;
+    }
+
+    .note span {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .footer-links {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-links a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="top">
       <div class="logo"></div>
-      <div>
-        <h1>حاسبة السعرات الحرارية – Fitness Factory</h1>
-        <p class="sub">ادخل بياناتك واحصل على السعرات الحرارية للحفاظ على الوزن - خسارة الوزن - زيادة الوزن</p>
+      <div class="brand">
+        <h1>
+          Fitness Factory
+          <span>حاسبة السعرات الحرارية</span>
+        </h1>
+        <p>ادخل بياناتك واحصل على السعرات التقريبية للحفاظ، الخسارة، والضخامة.</p>
       </div>
     </div>
 
-    <div class="card">
-      <div class="content">
-        <div class="grid">
-          <div>
-            <label>الجنس</label>
-            <select id="gender">
-              <option value="male">ذكر</option>
-              <option value="female">أنثى</option>
-            </select>
-          </div>
-          <div>
-            <label>العمر (سنة)</label>
-            <input id="age" type="number" min="10" max="90" placeholder="مثال: 28">
-          </div>
-
-          <div>
-            <label>الطول (سم)</label>
-            <input id="height" type="number" min="120" max="230" placeholder="مثال: 175">
-          </div>
-          <div>
-            <label>الوزن (كجم)</label>
-            <input id="weight" type="number" min="30" max="250" step="0.1" placeholder="مثال: 80">
-          </div>
-
-          <div>
-            <label>عدد أيام التمرين بالأسبوع</label>
-            <select id="days">
-              <option value="1-2">1–2 يوم</option>
-              <option value="3-5">3–5 أيام</option>
-              <option value="6-7">6–7 أيام</option>
-            </select>
-            <div class="hint">نستخدم معامل نشاط تلقائي حسب اختيارك</div>
-          </div>
-
-          <div class="row">
-            <button id="calc">احسب السعرات</button>
-            <button id="reset" style="background:#2b2b2b; color:#fff">تفريغ</button>
-          </div>
-        </div>
-
-        <div id="out" class="results" style="display:none">
-          <div class="res">
-            <h3>سعرات الحفاظ (TDEE)</h3>
-            <p id="maint"></p>
-            <div class="muted">هذه السعرات اليومية التقريبية للحفاظ على الوزن.</div>
-          </div>
-          <div class="res">
-            <h3>سعرات خسارة الوزن</h3>
-            <p id="cut"></p>
-            <div class="muted">تقليل 20% من سعرات المحافظة - اضبط النسبة لاحقاً حسب الاستجابة.</div>
-          </div>
-          <div class="res">
-            <h3>سعرات زيادة الوزن</h3>
-            <p id="bulk"></p>
-            <div class="muted">زيادة ~15% من سعرات المحافظة - راقب زيادة الدهون وعدّل إذا لزم.</div>
-          </div>
-        </div>
+    <!-- مدخلات -->
+    <div class="grid">
+      <div class="field">
+        <label for="age">العمر (سنة)</label>
+        <input id="age" type="number" min="10" max="80" value="25" />
       </div>
-<p style="color:#999; font-size:12px; text-align:center; margin-top:10px;">
-* الأرقام تقريبية وتُعد نقطة انطلاق- راقب وزنك وعدّل السعرات حسب استجابتك.
-</p>
-      <!-- روابط التواصل -->
-<div class="social-row">
-  <!-- Instagram -->
-  <a class="social-btn" href="https://instagram.com/fitnessfactory_11" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-    <!-- أيقونة SVG إنستجرام -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <rect x="3" y="3" width="18" height="18" rx="5" />
-      <circle cx="12" cy="12" r="4.2" />
-      <circle cx="17.5" cy="6.5" r="1.4" fill="currentColor" stroke="none"/>
-    </svg>
-  </a>
 
-  <!-- TikTok -->
-  <a class="social-btn" href="https://www.tiktok.com/@fitness_factory0" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M14.5 3h2.2c.2 2 1.4 3.5 3.3 4v2.2c-1.4-.1-2.7-.6-3.8-1.4v6.6a6.8 6.8 0 1 1-6.8-6.8c.3 0 .6 0 .9.1v2.4c-.3-.1-.6-.1-.9-.1a4.4 4.4 0 1 0 4.4 4.4V3Z"/>
-    </svg>
-  </a>
+      <div class="field">
+        <label for="weight">الوزن (كجم)</label>
+        <input id="weight" type="number" min="30" max="250" value="79" />
+      </div>
 
-  <!-- واتساب -->
-  <a class="social-btn" href="https://wa.me/966583028774" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2a9 9 0 0 0-7.7 13.6L3 22l6.6-1.3A9 9 0 1 0 12 2Zm0 2a7 7 0 0 1 6.1 10.5l-.3.5a1 1 0 0 0-.1.8l.5 2-2-.4a1 1 0 0 0-.8.1l-.5.3A7 7 0 1 1 12 4Zm-3 4.7c.2-.3.4-.3.6-.3h.5c.2 0 .4 0 .6.5.2.6.6 1.5.7 1.6.1.2 0 .4 0 .5l-.3.5c-.1.2-.2.3 0 .6.2.3.8 1.3 1.8 2 .9.6 1.6.8 1.9.9.2 0 .4 0 .5-.2l.8-1c.2-.2.3-.2.5-.1l1.5.7c.3.2.4.2.5.3 0 .2 0 1.1-.6 1.8-.6.7-1.7 1-2.3 1s-1.2 0-2.6-.6a11 11 0 0 1-3.7-2.5 9.6 9.6 0 0 1-2.2-3.4c-.3-.8-.3-1.6-.3-2 0-.6.2-1.3.6-1.8Z"/>
-    </svg>
-  </a>
+      <div class="field">
+        <label for="height">الطول (سم)</label>
+        <input id="height" type="number" min="130" max="230" value="170" />
+      </div>
 
-  <!-- متجر -->
-  <a class="social-btn" href="https://fitnessfactory-sa.com" target="_blank" rel="noopener noreferrer" aria-label="Store">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M3 9h18l-1.2 11H4.2L3 9Zm1.5-4h15L21 9H3l1.5-4Zm5 6h4v7h-4v-7Z"/>
-    </svg>
-  </a>
-</div>
-<div class="social-caption">تابعنا واطلب جداولك الرياضية الآن ✨</div>
+      <div class="field">
+        <label for="gender">الجنس</label>
+        <select id="gender">
+          <option value="male">ذكر</option>
+          <option value="female">أنثى</option>
+        </select>
+      </div>
 
-
-      <div class="footer">
-        الصيغة: Mifflin–St Jeor. معاملات النشاط: 1–2 يوم = 1.375، 3–5 = 1.55، 6–7 = 1.725.
+      <div class="field">
+        <label for="activity">عدد أيام التمرين بالأسبوع</label>
+        <select id="activity">
+          <option value="1-2">1–2 يوم في الأسبوع</option>
+          <option value="3-5" selected>3–5 أيام في الأسبوع</option>
+          <option value="6-7">6–7 أيام في الأسبوع</option>
+        </select>
+        <small>نستخدم معامل نشاط تلقائي حسب اختيارك.</small>
       </div>
     </div>
+
+    <!-- سطر النشاط (شرح بسيط) -->
+    <div class="activity-row">
+      <label>معامل النشاط المستخدم:</label>
+      <span id="activityFactor" style="font-size:13px; color:var(--green); font-weight:600;">1.55 (متوسط)</span>
+    </div>
+
+    <!-- الأزرار -->
+    <div class="actions">
+      <button class="btn btn-primary" onclick="calculateCalories()">احسب السعرات</button>
+      <button class="btn btn-ghost" onclick="resetForm()">تفريغ</button>
+    </div>
+
+    <!-- النتائج -->
+    <div class="results">
+      <div class="card-result" id="tdeeCard">
+        <div class="card-head">
+          <div class="card-title">سعرات الحفاظ على الوزن (TDEE)</div>
+          <span class="badge">Maintenance</span>
+        </div>
+        <div class="main-number" id="tdeeResult">—<span>سعرة/يوم</span></div>
+        <p>هذه هي السعرات اليومية التقريبية للحفاظ على وزنك الحالي.</p>
+      </div>
+
+      <div class="card-result cut" id="cutCard">
+        <div class="card-head">
+          <div class="card-title">سعرات خسارة الوزن</div>
+          <span class="badge">Cutting</span>
+        </div>
+        <div class="main-number" id="cutResult">—<span>سعرة/يوم</span></div>
+        <p>تقليل تقريباً 20٪ من سعرات الحفاظ لبدء خسارة دهون تدريجية.</p>
+      </div>
+
+      <div class="card-result bulk" id="bulkCard">
+        <div class="card-head">
+          <div class="card-title">سعرات الضخامة</div>
+          <span class="badge">Bulking</span>
+        </div>
+        <div class="main-number" id="bulkResult">—<span>سعرة/يوم</span></div>
+        <p>زيادة تقريباً 15٪ من سعرات الحفاظ لزيادة الكتلة العضلية تدريجياً.</p>
+      </div>
+    </div>
+
+    <p class="note">
+      * الأرقام تقريبية وتُعد نقطة انطلاق. راقب وزنك واستجابتك، وعدّل السعرات حسب <span>استجابة جسمك</span>.
+    </p>
   </div>
 
   <script>
-    const el = (id)=>document.getElementById(id);
-    const fmt = (n)=> Math.round(n).toLocaleString('ar-EG');
+    // نفس المعادلات السابقة: Mifflin-St Jeor + معاملات النشاط + نسب الخسارة/الضخامة
 
-    function activityFactor(days){
-      switch(days){
-        case '1-2': return 1.375;   // نشاط خفيف
-        case '3-5': return 1.55;    // نشاط متوسط
-        case '6-7': return 1.725;   // نشاط عالٍ
-        default:    return 1.375;
+    function getActivityFactor(code) {
+      switch (code) {
+        case "1-2": return 1.375;  // خفيف
+        case "3-5": return 1.55;   // متوسط
+        case "6-7": return 1.725;  // عالي
+        default: return 1.55;
       }
     }
 
-    function bmrMifflin({gender, weight, height, age}){
-      // الوزن كجم، الطول سم
-      if (gender === 'male'){
-        return 10*weight + 6.25*height - 5*age + 5;
-      } else {
-        return 10*weight + 6.25*height - 5*age - 161;
-      }
+    function updateActivityLabel() {
+      const activity = document.getElementById("activity").value;
+      const factor = getActivityFactor(activity);
+      let label = "";
+      if (activity === "1-2") label = "نشاط خفيف";
+      else if (activity === "3-5") label = "نشاط متوسط";
+      else label = "نشاط عالٍ";
+
+      document.getElementById("activityFactor").textContent =
+        factor.toFixed(3) + " (" + label + ")";
     }
 
-    function calc(){
-      const gender = el('gender').value;
-      const age    = Number(el('age').value);
-      const height = Number(el('height').value);
-      const weight = Number(el('weight').value);
-      const days   = el('days').value;
+    document.getElementById("activity").addEventListener("change", updateActivityLabel);
+    updateActivityLabel(); // أول مرة
 
-      // تحقق سريع
-      if (!age || !height || !weight){
-        alert('رجاءً أدخل العمر والطول والوزن بشكل صحيح.');
+    function roundTo5(num) {
+      return Math.round(num / 5) * 5;
+    }
+
+    function calculateCalories() {
+      const age = parseFloat(document.getElementById("age").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const height = parseFloat(document.getElementById("height").value);
+      const gender = document.getElementById("gender").value;
+      const activity = document.getElementById("activity").value;
+
+      if (!age || !weight || !height) {
+        alert("رجاءً أدخل العمر والوزن والطول بشكل صحيح.");
         return;
       }
 
-      const bmr = bmrMifflin({gender, weight, height, age});
-      const tdee = bmr * activityFactor(days);
+      // معادلة Mifflin-St Jeor
+      let bmr;
+      if (gender === "male") {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      } else {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      }
 
-      const cut  = tdee * 0.80;  // -20%
-      const bulk = tdee * 1.15;  // +15%
+      const factor = getActivityFactor(activity);
+      const tdee = bmr * factor;
 
-      el('maint').textContent = fmt(tdee) + ' سعرة/يوم';
-      el('cut').textContent   = fmt(cut)  + ' سعرة/يوم';
-      el('bulk').textContent  = fmt(bulk) + ' سعرة/يوم';
+      const cut = tdee * 0.8;   // -20%
+      const bulk = tdee * 1.15; // +15%
 
-      el('out').style.display = 'grid';
+      const tdeeR = roundTo5(tdee);
+      const cutR = roundTo5(cut);
+      const bulkR = roundTo5(bulk);
+
+      document.getElementById("tdeeResult").innerHTML =
+        tdeeR.toLocaleString("ar-SA") + '<span>سعرة/يوم</span>';
+      document.getElementById("cutResult").innerHTML =
+        cutR.toLocaleString("ar-SA") + '<span>سعرة/يوم</span>';
+      document.getElementById("bulkResult").innerHTML =
+        bulkR.toLocaleString("ar-SA") + '<span>سعرة/يوم</span>';
     }
 
-    el('calc').addEventListener('click', calc);
-    el('reset').addEventListener('click', ()=>{
-      ['age','height','weight'].forEach(id=> el(id).value='');
-      el('gender').value='male';
-      el('days').value='3-5';
-      el('out').style.display='none';
-    });
+    function resetForm() {
+      document.getElementById("age").value = 25;
+      document.getElementById("weight").value = 79;
+      document.getElementById("height").value = 170;
+      document.getElementById("gender").value = "male";
+      document.getElementById("activity").value = "3-5";
+      updateActivityLabel();
+
+      document.getElementById("tdeeResult").innerHTML = "—<span>سعرة/يوم</span>";
+      document.getElementById("cutResult").innerHTML = "—<span>سعرة/يوم</span>";
+      document.getElementById("bulkResult").innerHTML = "—<span>سعرة/يوم</span>";
+    }
   </script>
 </body>
 </html>
