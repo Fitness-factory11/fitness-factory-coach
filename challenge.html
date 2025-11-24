@@ -187,8 +187,6 @@
       margin-top: 4px;
     }
 
-    
-
     /* -------- سجل التمارين -------- */
 
     .exercise-table-wrapper {
@@ -364,6 +362,105 @@
     .pill-info span {
       font-size: 13px;
     }
+
+    /* -------- مودال الأيام المحفوظة -------- */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 16px;
+    }
+
+    .modal-panel {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(135deg, #020b23, #020617);
+      border-radius: 18px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+      padding: 16px 18px 14px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .modal-header span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .modal-close-btn {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 4px;
+      border-radius: 999px;
+    }
+
+    .modal-close-btn:hover {
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .saved-days-list-empty {
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: center;
+      margin: 10px 0 4px;
+    }
+
+    .saved-day-btn {
+      width: 100%;
+      text-align: right;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      background: #02081b;
+      color: #e5e7eb;
+      padding: 8px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      transition: 0.18s ease;
+    }
+
+    .saved-day-btn span {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .saved-day-btn:hover {
+      border-color: #3b82f6;
+      background: #020a1f;
+    }
+
+    .modal-footer-note {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #64748b;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -422,11 +519,6 @@
         </div>
       </div>
     </div>
-<div style="margin:15px 0; padding:10px; background:#0f1624; border-radius:10px;">
-  <label style="display:block; margin-bottom:5px;">📅 اختر يوم سابق لعرض السجل:</label>
-  <input type="date" id="browseDate" style="padding:6px; border-radius:6px; border:1px solid #555;">
-  <button id="loadDayBtn" style="margin-right:10px; padding:6px 12px; border-radius:6px; background:#3b82f6; color:white;">تحميل بيانات اليوم</button>
-</div>
 
     <!-- سجل التمارين اليومي -->
     <div class="card">
@@ -475,6 +567,9 @@
           <button type="button" class="btn btn-outline" id="btn-clear-day">
             مسح بيانات اليوم
           </button>
+          <button type="button" class="btn btn-outline" id="btn-show-days">
+            📅 الأيام المحفوظة
+          </button>
         </div>
         <button type="button" class="btn btn-primary" id="btn-save-day">
           💾 حفظ اليوم
@@ -515,6 +610,27 @@
     </div>
   </div>
 
+  <!-- مودال الأيام المحفوظة -->
+  <div id="saved-days-modal" class="modal-backdrop">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <h3>الأيام المحفوظة</h3>
+          <span>اختر يومًا لعرض سجله وتحميله في النموذج.</span>
+        </div>
+        <button type="button" id="saved-days-close" class="modal-close-btn" aria-label="إغلاق">
+          ×
+        </button>
+      </div>
+      <div id="saved-days-list">
+        <!-- يُبنى ديناميكيًا -->
+      </div>
+      <div class="modal-footer-note">
+        يتم تخزين السجلات على جهازك فقط. إذا مسحت بيانات المتصفح، سيتم مسح السجلات.
+      </div>
+    </div>
+  </div>
+
   <script>
     // مفتاح التخزين في المتصفح (localStorage)
     const STORAGE_KEY = "ff90_challenge_v1";
@@ -537,6 +653,9 @@
     const btnAddExercise = document.getElementById("btn-add-exercise");
     const btnSaveDay = document.getElementById("btn-save-day");
     const btnClearDay = document.getElementById("btn-clear-day");
+    const btnShowDays = document.getElementById("btn-show-days");
+
+    let state = loadAllData();
 
     // تحميل البيانات من التخزين أو إنشاء هيكل جديد
     function loadAllData() {
@@ -573,8 +692,6 @@
     function saveAllData(data) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
-
-    let state = loadAllData();
 
     // تهيئة بيانات المتدرب في الحقول
     function populateAthlete() {
@@ -778,6 +895,71 @@
       dayNotesTextarea.value = "";
     }
 
+    // إعداد مودال الأيام المحفوظة
+    function setupSavedDaysModal() {
+      const modal = document.getElementById("saved-days-modal");
+      const listContainer = document.getElementById("saved-days-list");
+      const closeBtn = document.getElementById("saved-days-close");
+
+      if (!modal || !btnShowDays) return;
+
+      function closeModal() {
+        modal.style.display = "none";
+      }
+
+      function openModal() {
+        const days = state.days || {};
+        const keys = Object.keys(days);
+
+        if (!keys.length) {
+          listContainer.innerHTML = `
+            <div class="saved-days-list-empty">
+              ما في أي أيام محفوظة حتى الآن.<br/>
+              احفظ أول يوم من سجل التدريب ثم ارجع هنا.
+            </div>
+          `;
+        } else {
+          const sorted = keys.sort(); // من الأقدم للأحدث
+          let html = "";
+          sorted.forEach((d) => {
+            const info = days[d];
+            const summary = info?.summary || "";
+            html += `
+              <button type="button" class="saved-day-btn" data-date="${d}">
+                <div>
+                  📅 ${d}
+                  ${summary ? `<div><span>${summary}</span></div>` : ""}
+                </div>
+                <span>عرض</span>
+              </button>
+            `;
+          });
+          listContainer.innerHTML = html;
+
+          // ربط الأزرار داخل المودال
+          listContainer.querySelectorAll(".saved-day-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const date = btn.getAttribute("data-date");
+              trainingDateInput.value = date;
+              populateDay(date);
+              closeModal();
+            });
+          });
+        }
+
+        modal.style.display = "flex";
+      }
+
+      btnShowDays.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+    }
+
     // تهيئة أولية عند تحميل الصفحة
     function init() {
       state = loadAllData();
@@ -802,71 +984,11 @@
       trainingDateInput.addEventListener("change", () => {
         populateDay(trainingDateInput.value);
       });
+
+      setupSavedDaysModal();
     }
 
     document.addEventListener("DOMContentLoaded", init);
-    // 👇 عرض قائمة الأيام المحفوظة
-function openSavedDays() {
-    const saved = JSON.parse(localStorage.getItem("fitness90")) || {};
-    const days = saved.days || {};
-    const box = document.getElementById("savedDaysList");
-
-    if (Object.keys(days).length === 0) {
-        box.innerHTML = "<p>لا توجد أيام محفوظة بعد.</p>";
-        box.style.display = "block";
-        return;
-    }
-
-    let html = "<h4>الأيام المحفوظة:</h4>";
-    html += "<ul style='list-style:none; padding:0;'>";
-
-    Object.keys(days).forEach(d => {
-        html += `<li style="margin:6px 0;">
-                    <button onclick="loadDay('${d}')" 
-                        style="padding:6px 10px;">
-                        ${d}
-                    </button>
-                 </li>`;
-    });
-
-    html += "</ul>";
-
-    box.innerHTML = html;
-    box.style.display = "block";
-}
-
-// 👇 تحميل يوم سابق إلى الواجهة
-function loadDay(dateStr) {
-    const saved = JSON.parse(localStorage.getItem("fitness90")) || {};
-    const days = saved.days || {};
-
-    if (!days[dateStr]) {
-        alert("هذا اليوم لا يحتوي بيانات.");
-        return;
-    }
-
-    const data = days[dateStr];
-    trainingDateInput.value = dateStr;
-
-    // التمارين
-    document.getElementById("exerciseName").value = data.exercise || "";
-
-    for (let i = 1; i <= 5; i++) {
-        document.getElementById(`wgt${i}`).value = data[`wgt${i}`] || "";
-        document.getElementById(`rep${i}`).value = data[`rep${i}`] || "";
-    }
-
-    // الكارديو
-    document.getElementById("cardioMinutes").value = data.cardioMinutes || "";
-    document.getElementById("cardioLevel").value = data.level || "";
-    document.getElementById("cardioCalories").value = data.calories || "";
-
-    // الملاحظات
-    document.getElementById("dayNotes").value = data.notes || "";
-
-    alert("✔️ تم تحميل بيانات هذا اليوم!");
-}
-
   </script>
 </body>
 </html>
