@@ -187,6 +187,8 @@
       margin-top: 4px;
     }
 
+    
+
     /* -------- سجل التمارين -------- */
 
     .exercise-table-wrapper {
@@ -420,6 +422,11 @@
         </div>
       </div>
     </div>
+<div style="margin:15px 0; padding:10px; background:#0f1624; border-radius:10px;">
+  <label style="display:block; margin-bottom:5px;">📅 اختر يوم سابق لعرض السجل:</label>
+  <input type="date" id="browseDate" style="padding:6px; border-radius:6px; border:1px solid #555;">
+  <button id="loadDayBtn" style="margin-right:10px; padding:6px 12px; border-radius:6px; background:#3b82f6; color:white;">تحميل بيانات اليوم</button>
+</div>
 
     <!-- سجل التمارين اليومي -->
     <div class="card">
@@ -798,6 +805,68 @@
     }
 
     document.addEventListener("DOMContentLoaded", init);
+    // 👇 عرض قائمة الأيام المحفوظة
+function openSavedDays() {
+    const saved = JSON.parse(localStorage.getItem("fitness90")) || {};
+    const days = saved.days || {};
+    const box = document.getElementById("savedDaysList");
+
+    if (Object.keys(days).length === 0) {
+        box.innerHTML = "<p>لا توجد أيام محفوظة بعد.</p>";
+        box.style.display = "block";
+        return;
+    }
+
+    let html = "<h4>الأيام المحفوظة:</h4>";
+    html += "<ul style='list-style:none; padding:0;'>";
+
+    Object.keys(days).forEach(d => {
+        html += `<li style="margin:6px 0;">
+                    <button onclick="loadDay('${d}')" 
+                        style="padding:6px 10px;">
+                        ${d}
+                    </button>
+                 </li>`;
+    });
+
+    html += "</ul>";
+
+    box.innerHTML = html;
+    box.style.display = "block";
+}
+
+// 👇 تحميل يوم سابق إلى الواجهة
+function loadDay(dateStr) {
+    const saved = JSON.parse(localStorage.getItem("fitness90")) || {};
+    const days = saved.days || {};
+
+    if (!days[dateStr]) {
+        alert("هذا اليوم لا يحتوي بيانات.");
+        return;
+    }
+
+    const data = days[dateStr];
+    trainingDateInput.value = dateStr;
+
+    // التمارين
+    document.getElementById("exerciseName").value = data.exercise || "";
+
+    for (let i = 1; i <= 5; i++) {
+        document.getElementById(`wgt${i}`).value = data[`wgt${i}`] || "";
+        document.getElementById(`rep${i}`).value = data[`rep${i}`] || "";
+    }
+
+    // الكارديو
+    document.getElementById("cardioMinutes").value = data.cardioMinutes || "";
+    document.getElementById("cardioLevel").value = data.level || "";
+    document.getElementById("cardioCalories").value = data.calories || "";
+
+    // الملاحظات
+    document.getElementById("dayNotes").value = data.notes || "";
+
+    alert("✔️ تم تحميل بيانات هذا اليوم!");
+}
+
   </script>
 </body>
 </html>
