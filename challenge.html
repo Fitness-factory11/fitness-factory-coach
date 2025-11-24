@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fitness Factory – تحدي 90 يوم</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020b23;
+      --card-soft: #020a1c;
+      --border: #0f172a;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #007aff;
+      --accent-soft: #00ff87;
+      --accent-red: #fb7185;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0b1220 0, #020617 45%, #000 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+        "Noto Sans Arabic", "Tajawal", sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    /* -------- الهيدر -------- */
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: radial-gradient(circle at 15% 0%, #00ff87 0, #00ff87 8%, #007aff 46%, #020617 100%);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .brand-text h1 span {
+      color: var(--accent-soft);
+    }
+
+    .brand-text p {
+      margin: 2px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .badge-small {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      font-size: 11px;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    /* -------- الكروت العامة -------- */
+
+    .card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.86));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .card-header span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      background: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid #1f2937;
+      color: var(--text);
+      padding: 9px 11px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+      background: #02081b;
+    }
+
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* -------- سجل التمارين -------- */
+
+    .exercise-table-wrapper {
+      border-radius: var(--radius-md);
+      border: 1px solid #111827;
+      background: radial-gradient(circle at top left, #020b23, #020617 50%);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    thead {
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    th,
+    td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #0b1220;
+      border-left: 1px solid #02081a;
+      font-size: 11.5px;
+    }
+
+    th {
+      text-align: center;
+      color: var(--muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    td {
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    td:first-child,
+    th:first-child {
+      position: sticky;
+      right: 0;
+      background: rgba(15, 23, 42, 0.9);
+      z-index: 2;
+    }
+
+    .exercise-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 8px;
+      border: 1px solid #111827;
+      color: var(--text);
+      padding: 5px 6px;
+      font-size: 12px;
+    }
+
+    .set-group {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .set-field {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 8px;
+      border: 1px solid #111827;
+      color: var(--text);
+      padding: 4px 5px;
+      font-size: 11px;
+    }
+
+    .exercise-row:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* -------- أزرار -------- */
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.06s ease, box-shadow 0.12s ease, filter 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #22c1f1);
+      color: #0b1120;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid #374151;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--accent-red);
+      border: none;
+      padding-inline: 4px;
+      font-size: 11px;
+    }
+
+    .btn:hover {
+      filter: brightness(1.03);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    /* -------- كارديو + ملاحظات -------- */
+
+    .sub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    @media (max-width: 720px) {
+      .sub-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .footer-note a {
+      color: var(--accent-soft);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+
+    .pill-info {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px dashed #4b5563;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .pill-info span {
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- الهيدر -->
+    <div class="top">
+      <div class="brand-area">
+        <div class="logo">
+          <!-- إذا عندك ff_log.svg في نفس المجلد خلّي السطر هذا -->
+          <img src="ff_log.svg" alt="Fitness Factory logo" />
+        </div>
+        <div class="brand-text">
+          <h1><span>تحدي 90 يوم</span> – Fitness Factory</h1>
+          <p>دفتر تدريب رقمي لتسجيل تمارينك وأوزانك وتطورك أسبوعيًا.</p>
+        </div>
+      </div>
+      <div class="badge-small">
+        نسخة أولية تجريبية – البيانات تُحفظ على جهازك فقط (localStorage)
+      </div>
+    </div>
+
+    <!-- بيانات المتدرب -->
+    <div class="card">
+      <div class="card-header">
+        <h2>بيانات المتدرب</h2>
+        <span>تُحفظ تلقائيًا عند التعديل</span>
+      </div>
+      <div class="two-col">
+        <div>
+          <label for="athlete-name">الاسم</label>
+          <input id="athlete-name" type="text" placeholder="مثال: أحمد محمد" />
+        </div>
+        <div>
+          <label for="athlete-phone">رقم الجوال (اختياري)</label>
+          <input id="athlete-phone" type="text" placeholder="05xxxxxxxx" />
+        </div>
+        <div>
+          <label for="start-date">تاريخ بداية التحدي</label>
+          <input id="start-date" type="date" />
+        </div>
+        <div>
+          <label for="main-goal">هدفك الرئيسي</label>
+          <select id="main-goal">
+            <option value="">اختر الهدف…</option>
+            <option value="loss">خسارة دهون/وزن</option>
+            <option value="maintain">الحفاظ على الوزن/الكتلة</option>
+            <option value="bulk">زيادة كتلة عضلية (ضخامة)</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <label for="goal-notes">أهدافي بالتفصيل</label>
+        <textarea id="goal-notes" placeholder="اكتب هنا أهدافك بالأرقام: وزن مستهدف، قياسات، قوة في تمارين معينة…"></textarea>
+        <div class="hint">
+          حاول تكتب أهداف واضحة ومحددة بزمن (SMART) – هذا يساعدك تتابع تقدمك خلال 90 يوم.
+        </div>
+      </div>
+    </div>
+
+    <!-- سجل التمارين اليومي -->
+    <div class="card">
+      <div class="card-header">
+        <h2>سجل التمارين اليومي</h2>
+        <span>اختر اليوم، ثم أضف التمارين والجلسات واحفظ اليوم</span>
+      </div>
+
+      <div class="two-col" style="margin-bottom:10px;">
+        <div>
+          <label for="training-date">التاريخ / اليوم</label>
+          <input id="training-date" type="date" />
+          <div class="hint">
+            إذا غيّرت التاريخ، سيتم تحميل البيانات المحفوظة لذلك اليوم (إن وُجدت).
+          </div>
+        </div>
+        <div>
+          <label>ملخص سريع لليوم (اختياري)</label>
+          <input id="day-summary" type="text" placeholder="مثال: صدر + تراي | إحساس ممتاز | نوم قليل" />
+        </div>
+      </div>
+
+      <div class="exercise-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>التمرين</th>
+              <th>الجلسة 1<br />WGT / REP</th>
+              <th>الجلسة 2<br />WGT / REP</th>
+              <th>الجلسة 3<br />WGT / REP</th>
+              <th>الجلسة 4<br />WGT / REP</th>
+              <th>الجلسة 5<br />WGT / REP</th>
+            </tr>
+          </thead>
+          <tbody id="exercise-rows">
+            <!-- يتم تعبئتها ديناميكيًا -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions-row">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-outline" id="btn-add-exercise">
+            + إضافة تمرين
+          </button>
+          <button type="button" class="btn btn-outline" id="btn-clear-day">
+            مسح بيانات اليوم
+          </button>
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-save-day">
+          💾 حفظ اليوم
+        </button>
+      </div>
+
+      <div class="pill-info">
+        <span>ℹ️</span>
+        <span>يمكنك إضافة عدد التمارين اللي تحتاجه، وكل يوم يُخزن بشكل مستقل في جهازك.</span>
+      </div>
+
+      <hr style="border:none; border-top:1px solid #111827; margin:14px 0;" />
+
+      <!-- كارديو + ملاحظات -->
+      <div class="sub-grid">
+        <div>
+          <label for="cardio-time">الكارديو – الوقت (دقائق)</label>
+          <input id="cardio-time" type="number" min="0" placeholder="مثال: 20" />
+        </div>
+        <div>
+          <label for="cardio-level">الكارديو – مستوى/شدة</label>
+          <input id="cardio-level" type="text" placeholder="مثال: مشي سريع، جري خفيف…" />
+        </div>
+        <div>
+          <label for="cardio-calories">السعرات المحروقة (تقريبية)</label>
+          <input id="cardio-calories" type="number" min="0" placeholder="مثال: 180" />
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <label for="day-notes">ملاحظات اليوم</label>
+        <textarea id="day-notes" placeholder="أكتب إحساسك، نومك، تغذيتك، أو أي ملاحظة تحب ترجع لها لاحقًا."></textarea>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      * هذه نسخة أولية من دفتر تحدي 90 يوم. تابع الاستخدام كم يوم، وبعدها نطورها سوا (إضافة قياسات أسبوعية، تحدي 30 يوم، تقارير…).
+    </div>
+  </div>
+
+  <script>
+    // مفتاح التخزين في المتصفح (localStorage)
+    const STORAGE_KEY = "ff90_challenge_v1";
+
+    // عناصر الصفحة
+    const athleteNameInput = document.getElementById("athlete-name");
+    const athletePhoneInput = document.getElementById("athlete-phone");
+    const startDateInput = document.getElementById("start-date");
+    const mainGoalSelect = document.getElementById("main-goal");
+    const goalNotesTextarea = document.getElementById("goal-notes");
+
+    const trainingDateInput = document.getElementById("training-date");
+    const daySummaryInput = document.getElementById("day-summary");
+    const exerciseRowsTbody = document.getElementById("exercise-rows");
+    const cardioTimeInput = document.getElementById("cardio-time");
+    const cardioLevelInput = document.getElementById("cardio-level");
+    const cardioCaloriesInput = document.getElementById("cardio-calories");
+    const dayNotesTextarea = document.getElementById("day-notes");
+
+    const btnAddExercise = document.getElementById("btn-add-exercise");
+    const btnSaveDay = document.getElementById("btn-save-day");
+    const btnClearDay = document.getElementById("btn-clear-day");
+
+    // تحميل البيانات من التخزين أو إنشاء هيكل جديد
+    function loadAllData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return {
+            athlete: {
+              name: "",
+              phone: "",
+              startDate: "",
+              mainGoal: "",
+              goalNotes: "",
+            },
+            days: {}, // مفتاح = تاريخ (YYYY-MM-DD)
+          };
+        }
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error("Error parsing stored data", e);
+        return {
+          athlete: {
+            name: "",
+            phone: "",
+            startDate: "",
+            mainGoal: "",
+            goalNotes: "",
+          },
+          days: {},
+        };
+      }
+    }
+
+    function saveAllData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    let state = loadAllData();
+
+    // تهيئة بيانات المتدرب في الحقول
+    function populateAthlete() {
+      const a = state.athlete;
+      athleteNameInput.value = a.name || "";
+      athletePhoneInput.value = a.phone || "";
+      startDateInput.value = a.startDate || "";
+      mainGoalSelect.value = a.mainGoal || "";
+      goalNotesTextarea.value = a.goalNotes || "";
+    }
+
+    // حفظ بيانات المتدرب في كل تغيير
+    function attachAthleteListeners() {
+      athleteNameInput.addEventListener("input", () => {
+        state.athlete.name = athleteNameInput.value.trim();
+        saveAllData(state);
+      });
+      athletePhoneInput.addEventListener("input", () => {
+        state.athlete.phone = athletePhoneInput.value.trim();
+        saveAllData(state);
+      });
+      startDateInput.addEventListener("change", () => {
+        state.athlete.startDate = startDateInput.value;
+        saveAllData(state);
+      });
+      mainGoalSelect.addEventListener("change", () => {
+        state.athlete.mainGoal = mainGoalSelect.value;
+        saveAllData(state);
+      });
+      goalNotesTextarea.addEventListener("input", () => {
+        state.athlete.goalNotes = goalNotesTextarea.value.trim();
+        saveAllData(state);
+      });
+    }
+
+    // إنشاء صف تمرين جديد
+    function createExerciseRow(rowData = null) {
+      const tr = document.createElement("tr");
+      tr.className = "exercise-row";
+
+      // خلية اسم التمرين
+      const nameTd = document.createElement("td");
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.className = "exercise-input";
+      nameInput.placeholder = "مثال: Bench Press / سكوات";
+      nameInput.value = rowData?.name || "";
+      nameTd.appendChild(nameInput);
+      tr.appendChild(nameTd);
+
+      // 5 جلسات
+      for (let i = 0; i < 5; i++) {
+        const td = document.createElement("td");
+        const group = document.createElement("div");
+        group.className = "set-group";
+
+        const wInput = document.createElement("input");
+        wInput.type = "number";
+        wInput.min = "0";
+        wInput.placeholder = "وزن";
+        wInput.className = "set-field";
+
+        const rInput = document.createElement("input");
+        rInput.type = "number";
+        rInput.min = "0";
+        rInput.placeholder = "تكرار";
+        rInput.className = "set-field";
+
+        if (rowData && rowData.sets && rowData.sets[i]) {
+          wInput.value = rowData.sets[i].w || "";
+          rInput.value = rowData.sets[i].r || "";
+        }
+
+        group.appendChild(wInput);
+        group.appendChild(rInput);
+        td.appendChild(group);
+        tr.appendChild(td);
+      }
+
+      exerciseRowsTbody.appendChild(tr);
+    }
+
+    // تنظيف جدول التمارين
+    function clearExerciseRows() {
+      exerciseRowsTbody.innerHTML = "";
+    }
+
+    // تحميل بيانات يوم معين في الحقول
+    function populateDay(dateStr) {
+      clearExerciseRows();
+
+      const day = state.days[dateStr];
+      if (!day) {
+        // يوم جديد → نعمل 3 صفوف افتراضية
+        for (let i = 0; i < 3; i++) createExerciseRow();
+        daySummaryInput.value = "";
+        cardioTimeInput.value = "";
+        cardioLevelInput.value = "";
+        cardioCaloriesInput.value = "";
+        dayNotesTextarea.value = "";
+        return;
+      }
+
+      daySummaryInput.value = day.summary || "";
+      cardioTimeInput.value = day.cardio?.time || "";
+      cardioLevelInput.value = day.cardio?.level || "";
+      cardioCaloriesInput.value = day.cardio?.calories || "";
+      dayNotesTextarea.value = day.notes || "";
+
+      if (day.exercises && day.exercises.length) {
+        day.exercises.forEach((ex) => createExerciseRow(ex));
+      } else {
+        for (let i = 0; i < 3; i++) createExerciseRow();
+      }
+    }
+
+    // جمع بيانات يوم من الحقول
+    function collectDayFromUI(dateStr) {
+      const rows = Array.from(
+        exerciseRowsTbody.querySelectorAll(".exercise-row")
+      );
+
+      const exercises = rows
+        .map((row) => {
+          const nameInput = row.querySelector(".exercise-input");
+          const setFields = Array.from(row.querySelectorAll(".set-field"));
+
+          const name = (nameInput.value || "").trim();
+          if (!name && setFields.every((f) => !f.value)) {
+            // صف فاضي بالكامل → نتجاهله
+            return null;
+          }
+
+          const sets = [];
+          for (let i = 0; i < setFields.length; i += 2) {
+            const w = setFields[i].value;
+            const r = setFields[i + 1].value;
+            if (!w && !r) {
+              sets.push({ w: "", r: "" });
+            } else {
+              sets.push({ w, r });
+            }
+          }
+
+          return { name, sets };
+        })
+        .filter(Boolean);
+
+      return {
+        summary: daySummaryInput.value.trim(),
+        exercises,
+        cardio: {
+          time: cardioTimeInput.value || "",
+          level: cardioLevelInput.value.trim(),
+          calories: cardioCaloriesInput.value || "",
+        },
+        notes: dayNotesTextarea.value.trim(),
+        updatedAt: new Date().toISOString(),
+      };
+    }
+
+    // حفظ اليوم
+    function saveCurrentDay() {
+      const dateStr = trainingDateInput.value;
+      if (!dateStr) {
+        alert("اختر تاريخ اليوم أولاً قبل الحفظ.");
+        return;
+      }
+      const dayData = collectDayFromUI(dateStr);
+      state.days[dateStr] = dayData;
+      saveAllData(state);
+      alert("تم حفظ بيانات هذا اليوم ✅");
+    }
+
+    // مسح بيانات اليوم من الواجهة (مع سؤال تأكيد)
+    function clearCurrentDayUI() {
+      const dateStr = trainingDateInput.value;
+      if (!dateStr) {
+        clearExerciseRows();
+        for (let i = 0; i < 3; i++) createExerciseRow();
+        daySummaryInput.value = "";
+        cardioTimeInput.value = "";
+        cardioLevelInput.value = "";
+        cardioCaloriesInput.value = "";
+        dayNotesTextarea.value = "";
+        return;
+      }
+
+      const sure = confirm(
+        "سيتم مسح بيانات هذا اليوم من الواجهة الآن (لن تُزال من التخزين إلا إذا حفظت بعد المسح). هل أنت متأكد؟"
+      );
+      if (!sure) return;
+
+      populateDay(dateStr); // نعيد تحميله فارغ/من التخزين
+      clearExerciseRows();
+      for (let i = 0; i < 3; i++) createExerciseRow();
+      daySummaryInput.value = "";
+      cardioTimeInput.value = "";
+      cardioLevelInput.value = "";
+      cardioCaloriesInput.value = "";
+      dayNotesTextarea.value = "";
+    }
+
+    // تهيئة أولية عند تحميل الصفحة
+    function init() {
+      state = loadAllData();
+      populateAthlete();
+      attachAthleteListeners();
+
+      // جعل تاريخ اليوم افتراضيًا
+      if (!trainingDateInput.value) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        trainingDateInput.value = `${yyyy}-${mm}-${dd}`;
+      }
+
+      populateDay(trainingDateInput.value);
+
+      btnAddExercise.addEventListener("click", () => createExerciseRow());
+      btnSaveDay.addEventListener("click", saveCurrentDay);
+      btnClearDay.addEventListener("click", clearCurrentDayUI);
+
+      trainingDateInput.addEventListener("change", () => {
+        populateDay(trainingDateInput.value);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
