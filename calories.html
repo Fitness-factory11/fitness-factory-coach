@@ -60,7 +60,7 @@
       width: 52px;
       height: 52px;
       border-radius: 18px;
-      background: background: url('ff_logo.svg') center/cover no-repeat; /* ← هنا التعديل */
+      background: url('ff_logo.svg') center/cover no-repeat; /* ← هنا التعديل */
   display: grid;
   place-items: center;
   position: relative;
@@ -358,17 +358,17 @@
     <div class="grid">
       <div class="field">
         <label for="age">العمر (سنة)</label>
-        <input id="age" type="number" min="10" max="80" value="25" />
+        <input id="age" type="number" min="10" max="80" placeholder="مثال: 25" />
       </div>
 
       <div class="field">
         <label for="weight">الوزن (كجم)</label>
-        <input id="weight" type="number" min="30" max="250" value="79" />
+        <input id="weight" type="number" min="30" max="250" placeholder="مثال: 79" />
       </div>
 
       <div class="field">
         <label for="height">الطول (سم)</label>
-        <input id="height" type="number" min="130" max="230" value="170" />
+        <input id="height" type="number" min="130" max="230" placeholder="مثال: 170" />
       </div>
 
       <div class="field">
@@ -504,19 +504,30 @@
         cutR.toLocaleString("ar-SA") + '<span>سعرة/يوم</span>';
       document.getElementById("bulkResult").innerHTML =
         bulkR.toLocaleString("ar-SA") + '<span>سعرة/يوم</span>';
+    
+
+      // ملاحظة: نُبقي بيانات المستخدم ظاهرة بعد الحساب
+      // التفريغ يتم فقط عبر زر "تفريغ"
     }
 
     function resetForm() {
-      document.getElementById("age").value = 25;
-      document.getElementById("weight").value = 79;
-      document.getElementById("height").value = 170;
+      // تفريغ الحقول (بدون قيم افتراضية)
+      document.getElementById("age").value = "";
+      document.getElementById("weight").value = "";
+      document.getElementById("height").value = "";
+
+      // نرجع الاختيارات للوضع الافتراضي
       document.getElementById("gender").value = "male";
       document.getElementById("activity").value = "3-5";
       updateActivityLabel();
 
+      // تصفير النتائج
       document.getElementById("tdeeResult").innerHTML = "—<span>سعرة/يوم</span>";
       document.getElementById("cutResult").innerHTML = "—<span>سعرة/يوم</span>";
       document.getElementById("bulkResult").innerHTML = "—<span>سعرة/يوم</span>";
+
+      // تركيز على أول خانة
+      document.getElementById("age").focus();
     }
   </script>
 </body>
