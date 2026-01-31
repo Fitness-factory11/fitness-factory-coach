@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <title>Fitness Factory – حاسبة السعرات الحرارية</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<title>Fitness Factory – حاسبة السعرات الحرارية</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<style>
     :root {
       --bg: #05070b;
       --card: #0c1017;
@@ -57,17 +57,19 @@
     }
 
     .logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      background: url('ff_logo.svg') center/cover no-repeat; /* ← هنا التعديل */
-  display: grid;
-  place-items: center;
-  position: relative;
-  overflow: hidden;
-}
-   
-    .brand h1 {
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      background: url('ff_logo_top.png') center/cover no-repeat;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+.brand h1 {
       font-size: 20px;
       margin: 0;
       display: flex;
@@ -331,114 +333,181 @@
     .footer-links a:hover {
       text-decoration: underline;
     }
-  </style>
-</head>
+  
 
+    /* الماكروز */
+    .macros {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .macro {
+      background: rgba(16, 22, 34, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 10px 10px;
+      text-align: center;
+    }
+    .macro .k {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .macro .v {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+    .macro .v span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-inline-start: 4px;
+    }
+
+    /* الفوتر وروابط المتجر والسوشيال */
+    .footer {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      text-decoration: none;
+      background: linear-gradient(135deg, #f7b500, #ffea00);
+      color: #0b0f18;
+      font-weight: 900;
+      border: 0;
+      box-shadow: 0 10px 30px rgba(255, 234, 0, 0.15);
+    }
+    .store-btn small {
+      font-weight: 700;
+      opacity: .8;
+    }
+    .social {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(16, 22, 34, 0.65);
+      border: 1px solid rgba(255,255,255,.08);
+      text-decoration: none;
+    }
+    .icon-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #ffffff;
+      opacity: .9;
+    }
+    .icon-btn:hover { transform: translateY(-1px); }
+</style>
+</head>
 <body>
-  <div class="wrap">
-    <div class="top">
- <div class="logo">
-   <img src="ff_log.svg" alt="logo" style="
+<div class="wrap">
+<div class="top">
+<div class="logo">
+<img alt="logo" src="ff_log.svg" style="
   width: 52px;
   height: 52px;
   object-fit: contain;
-">
+"/>
 </div>
-
-      <div class="brand">
-        <h1>
+<div class="brand">
+<h1>
           Fitness Factory
           <span>حاسبة السعرات الحرارية</span>
-        </h1>
-        <p>  ادخل بياناتك واحصل على السعرات الحرارية للحفاظ على الوزن - خسارة الدهون - زيادة الوزن </p>
-      </div>
-    </div>
-
-    <!-- مدخلات -->
-    <div class="grid">
-      <div class="field">
-        <label for="age">العمر (سنة)</label>
-        <input id="age" type="number" min="10" max="80" placeholder="مثال: 25" />
-      </div>
-
-      <div class="field">
-        <label for="weight">الوزن (كجم)</label>
-        <input id="weight" type="number" min="30" max="250" placeholder="مثال: 79" />
-      </div>
-
-      <div class="field">
-        <label for="height">الطول (سم)</label>
-        <input id="height" type="number" min="130" max="230" placeholder="مثال: 170" />
-      </div>
-
-      <div class="field">
-        <label for="gender">الجنس</label>
-        <select id="gender">
-          <option value="male">ذكر</option>
-          <option value="female">أنثى</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="activity">عدد أيام التمرين بالأسبوع</label>
-        <select id="activity">
-          <option value="1-2">1–2 يوم في الأسبوع</option>
-          <option value="3-5" selected>3–5 أيام في الأسبوع</option>
-          <option value="6-7">6–7 أيام في الأسبوع</option>
-        </select>
-        <small>نستخدم معامل نشاط تلقائي حسب اختيارك.</small>
-      </div>
-    </div>
-
-    <!-- سطر النشاط (شرح بسيط) -->
-    <div class="activity-row">
-      <label>معامل النشاط المستخدم:</label>
-      <span id="activityFactor" style="font-size:13px; color:var(--green); font-weight:600;">1.55 (متوسط)</span>
-    </div>
-
-    <!-- الأزرار -->
-    <div class="actions">
-      <button class="btn btn-primary" onclick="calculateCalories()">احسب السعرات</button>
-      <button class="btn btn-ghost" onclick="resetForm()">تفريغ</button>
-    </div>
-
-    <!-- النتائج -->
-    <div class="results">
-      <div class="card-result" id="tdeeCard">
-        <div class="card-head">
-          <div class="card-title">سعرات الحفاظ على الوزن (TDEE)</div>
-          <span class="badge">Maintenance</span>
-        </div>
-        <div class="main-number" id="tdeeResult">—<span>سعرة/يوم</span></div>
-        <p>هذه هي السعرات اليومية التقريبية للحفاظ على وزنك الحالي.</p>
-      </div>
-
-      <div class="card-result cut" id="cutCard">
-        <div class="card-head">
-          <div class="card-title">سعرات خسارة الوزن</div>
-          <span class="badge">Cutting</span>
-        </div>
-        <div class="main-number" id="cutResult">—<span>سعرة/يوم</span></div>
-        <p>تقليل تقريباً 20٪ من سعرات الحفاظ لبدء خسارة دهون تدريجية.</p>
-      </div>
-
-      <div class="card-result bulk" id="bulkCard">
-        <div class="card-head">
-          <div class="card-title">سعرات زيادة الوزن</div>
-          <span class="badge">Bulking</span>
-        </div>
-        <div class="main-number" id="bulkResult">—<span>سعرة/يوم</span></div>
-        <p>زيادة تقريباً 15٪ من سعرات الحفاظ لزيادة الكتلة العضلية تدريجياً.</p>
-      </div>
-    </div>
-
-    <p class="note">
-      *الأرقام تقريبية وتُعد نقطة انطلاق. راقب وزنك ، وعدّل السعرات حسب <span>استجابة جسمك</span>.
-      Fitnessfactory-sa.com
-    </p>
-  </div>
-
-  <script>
+</h1>
+<p>  ادخل بياناتك واحصل على السعرات الحرارية للحفاظ على الوزن - خسارة الدهون - زيادة الوزن </p>
+</div>
+</div>
+<!-- مدخلات -->
+<div class="grid">
+<div class="field">
+<label for="age">العمر (سنة)</label>
+<input id="age" max="80" min="10" placeholder="مثال: 25" type="number"/>
+</div>
+<div class="field">
+<label for="weight">الوزن (كجم)</label>
+<input id="weight" max="250" min="30" placeholder="مثال: 79" type="number"/>
+</div>
+<div class="field">
+<label for="height">الطول (سم)</label>
+<input id="height" max="230" min="130" placeholder="مثال: 170" type="number"/>
+</div>
+<div class="field">
+<label for="gender">الجنس</label>
+<select id="gender">
+<option value="male">ذكر</option>
+<option value="female">أنثى</option>
+</select>
+</div>
+<div class="field">
+<label for="activity">عدد أيام التمرين بالأسبوع</label>
+<select id="activity">
+<option value="1-2">1–2 يوم في الأسبوع</option>
+<option selected="" value="3-5">3–5 أيام في الأسبوع</option>
+<option value="6-7">6–7 أيام في الأسبوع</option>
+</select>
+<small>نستخدم معامل نشاط تلقائي حسب اختيارك.</small>
+</div>
+</div>
+<!-- سطر النشاط (شرح بسيط) -->
+<div class="activity-row">
+<label>معامل النشاط المستخدم:</label>
+<span id="activityFactor" style="font-size:13px; color:var(--green); font-weight:600;">1.55 (متوسط)</span>
+</div>
+<!-- الأزرار -->
+<div class="actions">
+<button class="btn btn-primary" onclick="calculateCalories()">احسب السعرات</button>
+<button class="btn btn-ghost" onclick="resetForm()">تفريغ</button>
+</div>
+<!-- النتائج -->
+<div class="results">
+<div class="card-result" id="tdeeCard">
+<div class="card-head">
+<div class="card-title">سعرات الحفاظ على الوزن (TDEE)</div>
+<span class="badge">Maintenance</span>
+</div>
+<div class="main-number" id="tdeeResult">—<span>سعرة/يوم</span></div><div class="macros" id="tdeeMacros"><div class="macro"><div class="k">بروتين</div><div class="v" id="tdeeP">—<span>g</span></div></div><div class="macro"><div class="k">كارب</div><div class="v" id="tdeeC">—<span>g</span></div></div><div class="macro"><div class="k">دهون</div><div class="v" id="tdeeF">—<span>g</span></div></div></div>
+<p>هذه هي السعرات اليومية التقريبية للحفاظ على وزنك الحالي.</p>
+</div>
+<div class="card-result cut" id="cutCard">
+<div class="card-head">
+<div class="card-title">سعرات خسارة الوزن</div>
+<span class="badge">Cutting</span>
+</div>
+<div class="main-number" id="cutResult">—<span>سعرة/يوم</span></div><div class="macros" id="cutMacros"><div class="macro"><div class="k">بروتين</div><div class="v" id="cutP">—<span>g</span></div></div><div class="macro"><div class="k">كارب</div><div class="v" id="cutC">—<span>g</span></div></div><div class="macro"><div class="k">دهون</div><div class="v" id="cutF">—<span>g</span></div></div></div>
+<p>تقليل تقريباً 20٪ من سعرات الحفاظ لبدء خسارة دهون تدريجية.</p>
+</div>
+<div class="card-result bulk" id="bulkCard">
+<div class="card-head">
+<div class="card-title">سعرات زيادة الوزن</div>
+<span class="badge">Bulking</span>
+</div>
+<div class="main-number" id="bulkResult">—<span>سعرة/يوم</span></div><div class="macros" id="bulkMacros"><div class="macro"><div class="k">بروتين</div><div class="v" id="bulkP">—<span>g</span></div></div><div class="macro"><div class="k">كارب</div><div class="v" id="bulkC">—<span>g</span></div></div><div class="macro"><div class="k">دهون</div><div class="v" id="bulkF">—<span>g</span></div></div></div>
+<p>زيادة تقريباً 15٪ من سعرات الحفاظ لزيادة الكتلة العضلية تدريجياً.</p>
+</div>
+</div>
+<div class="footer"><a class="store-btn" href="https://fitnessfactory-sa.com" rel="noopener" target="_blank">انتقل لمتجر Fitness Factory</a><div class="social"><a aria-label="instagram" class="icon-btn" href="https://instagram.com/fitnessfactory_11" rel="noopener" target="_blank"><svg viewbox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm8.5 1.5h-8.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm5.75-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"></path></svg></a><a aria-label="tiktok" class="icon-btn" href="https://tiktok.com/@fitness_factory0" rel="noopener" target="_blank"><svg viewbox="0 0 24 24"><path d="M16.5 3c.5 3.1 2.7 5.6 5.5 6.2V13c-2-.1-3.8-.7-5.5-1.8V16c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8c.5 0 1 .1 1.5.2v4.1c-.5-.2-1-.3-1.5-.3-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4V3h4.5Z"></path></svg></a><a aria-label="whatsapp" class="icon-btn" href="https://wa.me/966583028778" rel="noopener" target="_blank"><svg viewbox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-12.7 7.4L3 20l.7-4.7A8.5 8.5 0 1 1 20.5 12Zm-8.5-7a7 7 0 0 0-6 10.6l.2.3-.4 2.6 2.6-.7.3.2A7 7 0 1 0 12 5Zm3.8 10.2c-.2.6-1.1 1.1-1.6 1.2-.5.1-1.1.1-1.7-.1-1.4-.5-2.9-1.6-4-3-1.2-1.4-1.9-3-2-3.5-.1-.5 0-1.1.3-1.5.3-.4.7-.6 1-.6h.7c.2 0 .4 0 .6.5l.8 1.8c.1.3.1.5 0 .7l-.3.4c-.1.2-.3.4-.1.7.2.3.7 1.3 1.6 2 .9.7 1.6 1 1.9 1.1.3.1.5.1.7-.1l.8-1c.2-.2.4-.3.7-.2l1.9.9c.3.1.5.3.5.5 0 .2 0 .5-.1.8Z"></path></svg></a></div></div><p class="note">*الأرقام تقريبية وتُعد نقطة انطلاق. راقب وزنك وعدّل السعرات حسب استجابة جسمك.</p>
+</div>
+<script>
     // نفس المعادلات السابقة: Mifflin-St Jeor + معاملات النشاط + نسب الخسارة/الضخامة
 
     function getActivityFactor(code) {
@@ -469,7 +538,28 @@
       return Math.round(num / 5) * 5;
     }
 
-    function calculateCalories() {
+    
+    function calcMacros(calories, weightKg) {
+      // بروتين: 2g لكل كجم (قاعدة عملية لمعظم الحالات)
+      const proteinG = Math.round(weightKg * 2);
+
+      // دهون: 0.8g لكل كجم (حد أدنى جيد للهرمونات)
+      const fatG = Math.round(weightKg * 0.8);
+
+      // الكارب = باقي السعرات
+      const carbsG = Math.max(0, Math.round((calories - (proteinG * 4) - (fatG * 9)) / 4));
+
+      return { proteinG, carbsG, fatG };
+    }
+
+    function setMacros(prefix, calories, weightKg) {
+      const m = calcMacros(calories, weightKg);
+      document.getElementById(prefix + "P").innerHTML = m.proteinG.toLocaleString("ar-SA") + "<span>g</span>";
+      document.getElementById(prefix + "C").innerHTML = m.carbsG.toLocaleString("ar-SA") + "<span>g</span>";
+      document.getElementById(prefix + "F").innerHTML = m.fatG.toLocaleString("ar-SA") + "<span>g</span>";
+    }
+
+function calculateCalories() {
       const age = parseFloat(document.getElementById("age").value);
       const weight = parseFloat(document.getElementById("weight").value);
       const height = parseFloat(document.getElementById("height").value);
@@ -505,6 +595,12 @@
         cutR.toLocaleString("ar-SA") + '<span>سعرة/يوم</span>';
       document.getElementById("bulkResult").innerHTML =
         bulkR.toLocaleString("ar-SA") + '<span>سعرة/يوم</span>';
+
+      // الماكروز (g) لكل هدف
+      setMacros("tdee", tdeeR, weight);
+      setMacros("cut", cutR, weight);
+      setMacros("bulk", bulkR, weight);
+
     
 
       // ملاحظة: نُبقي بيانات المستخدم ظاهرة بعد الحساب
@@ -526,6 +622,18 @@
       document.getElementById("tdeeResult").innerHTML = "—<span>سعرة/يوم</span>";
       document.getElementById("cutResult").innerHTML = "—<span>سعرة/يوم</span>";
       document.getElementById("bulkResult").innerHTML = "—<span>سعرة/يوم</span>";
+      document.getElementById("tdeeP").innerHTML = "—<span>g</span>";
+      document.getElementById("tdeeC").innerHTML = "—<span>g</span>";
+      document.getElementById("tdeeF").innerHTML = "—<span>g</span>";
+
+      document.getElementById("cutP").innerHTML = "—<span>g</span>";
+      document.getElementById("cutC").innerHTML = "—<span>g</span>";
+      document.getElementById("cutF").innerHTML = "—<span>g</span>";
+
+      document.getElementById("bulkP").innerHTML = "—<span>g</span>";
+      document.getElementById("bulkC").innerHTML = "—<span>g</span>";
+      document.getElementById("bulkF").innerHTML = "—<span>g</span>";
+
 
       // تركيز على أول خانة
       document.getElementById("age").focus();
