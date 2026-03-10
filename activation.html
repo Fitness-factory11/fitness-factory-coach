@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تفعيل المدرب الذكي | Fitness Factory</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #070b12;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(180deg, #0d1420 0%, #0a1018 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      padding: 28px 22px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #0aa2ff, #00e0b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .brand p {
+      color: #a8b3c7;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #d9e3f0;
+    }
+
+    .input {
+      width: 100%;
+      padding: 15px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #0b1017;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    .input:focus {
+      border-color: #0aa2ff;
+      box-shadow: 0 0 0 3px rgba(10, 162, 255, 0.12);
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 16px;
+      border: none;
+      border-radius: 14px;
+      padding: 15px 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #07111b;
+      background: linear-gradient(90deg, #0aa2ff, #00e0b8);
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .msg {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.7;
+      display: none;
+    }
+
+    .msg.error {
+      display: block;
+      background: rgba(255, 77, 77, 0.12);
+      border: 1px solid rgba(255, 77, 77, 0.18);
+      color: #ff9a9a;
+    }
+
+    .msg.success {
+      display: block;
+      background: rgba(0, 224, 184, 0.12);
+      border: 1px solid rgba(0, 224, 184, 0.18);
+      color: #8ff0d8;
+    }
+
+    .hint {
+      margin-top: 18px;
+      color: #93a1b8;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <h1>Fitness Factory</h1>
+      <p>تفعيل المدرب الذكي الخاص بك</p>
+    </div>
+
+    <label class="label" for="activationCode">أدخل كود التفعيل</label>
+    <input
+      id="activationCode"
+      class="input"
+      type="text"
+      placeholder="مثال: FF-XXXX-XXXX-XXXX"
+      autocomplete="off"
+    />
+
+    <button id="activateBtn" class="btn" onclick="activateCode()">تفعيل الآن</button>
+
+    <div id="message" class="msg"></div>
+
+    <div class="hint">
+      هذا التفعيل مخصص لجهازك الحالي فقط.
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://kxaqysqncifsvsezhflo.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4YXF5c3FuY2lmc3ZzZXpoZmxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjg3MDIsImV4cCI6MjA4ODc0NDcwMn0.5ypXdL_2PGBY-2Ys57Rt7bw1o-UltCAlVWIoT54rvgI";
+
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function showMessage(text, type = "error") {
+      const box = document.getElementById("message");
+      box.className = `msg ${type}`;
+      box.textContent = text;
+    }
+
+    function normalizeCode(code) {
+      return code.trim().toUpperCase();
+    }
+
+    function getDeviceFingerprint() {
+      let saved = localStorage.getItem("ff_device_fingerprint");
+      if (saved) return saved;
+
+      const raw = [
+        navigator.userAgent,
+        navigator.language,
+        screen.width,
+        screen.height,
+        Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown",
+        new Date().getTimezoneOffset()
+      ].join("|");
+
+      const generated = "ff_" + btoa(unescape(encodeURIComponent(raw))).replace(/=/g, "").slice(0, 60);
+      localStorage.setItem("ff_device_fingerprint", generated);
+      return generated;
+    }
+
+    async function activateCode() {
+      const btn = document.getElementById("activateBtn");
+      const input = document.getElementById("activationCode");
+      const code = normalizeCode(input.value);
+      const deviceFingerprint = getDeviceFingerprint();
+
+      if (!code) {
+        showMessage("فضلاً أدخل كود التفعيل.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "جاري التحقق...";
+
+      try {
+        const { data, error } = await client
+          .from("activation_codes")
+          .select("*")
+          .eq("code", code)
+          .single();
+
+        if (error || !data) {
+          showMessage("كود التفعيل غير صحيح.");
+          return;
+        }
+
+        if (data.status === "activated" && data.device_fingerprint && data.device_fingerprint !== deviceFingerprint) {
+          showMessage("هذا الكود مفعل مسبقًا على جهاز آخر.");
+          return;
+        }
+
+        if (data.status === "revoked") {
+          showMessage("تم إيقاف هذا الكود. تواصل مع الدعم.");
+          return;
+        }
+
+        const updatePayload = {
+          status: "activated",
+          device_fingerprint: deviceFingerprint,
+          activated_at: new Date().toISOString()
+        };
+
+        const { error: updateError } = await client
+          .from("activation_codes")
+          .update(updatePayload)
+          .eq("id", data.id);
+
+        if (updateError) {
+          showMessage("صار خطأ أثناء التفعيل. حاول مرة ثانية.");
+          return;
+        }
+
+        localStorage.setItem("ff_activation_code", code);
+        localStorage.setItem("ff_is_activated", "true");
+
+        showMessage("تم التفعيل بنجاح. جاري تحويلك...", "success");
+
+        setTimeout(() => {
+          window.location.href = "coach.html";
+        }, 1200);
+
+      } catch (err) {
+        showMessage("حدث خطأ غير متوقع. حاول مرة ثانية.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "تفعيل الآن";
+      }
+    }
+  </script>
+</body>
+</html>
