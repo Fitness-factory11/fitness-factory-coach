@@ -1,10 +1,15 @@
 export default async function handler(req, res) {
 
-  const body = req.body
-  const message = body.message
+  if (req.method !== "POST") {
+    return res.status(405).json({ reply: "Method not allowed" });
+  }
 
-  const systemPrompt = `
-انت مدرب فتنس احترافي تابع لمتجر Fitness Factory.
+  try {
+
+    const { message } = req.body;
+
+    const systemPrompt = `
+أنت مدرب فتنس احترافي تابع لـ Fitness Factory.
 
 تتخصص فقط في:
 - بناء العضلات
@@ -24,38 +29,51 @@ PubMed
 Examine.com
 
 القواعد:
-- تجاوب بالعربية.
-- تجاوب كمدرب محترف.
-- لا تتكلم في مواضيع خارج الفتنس.
-- إذا السؤال خارج المجال قل:
-"أنا مختص في الفتنس والتغذية الرياضية فقط."
+- أجب بالعربية.
+- لا تجاوب عن أي شيء خارج الفتنس.
+- إذا كان السؤال خارج المجال قل:
+"أنا متخصص في الفتنس والتغذية الرياضية فقط."
+`;
 
-اجعل الإجابات:
-واضحة
-عملية
-مختصرة لكن مفيدة
-  `
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: message }
+        ],
+        temperature: 0.7
+      })
+    });
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: message }
-      ]
-    })
-  })
+    const data = await response.json();
 
-  const data = await response.json()
+    if (!response.ok) {
+      console.error(data);
+      return res.status(500).json({
+        reply: "خطأ في الاتصال بالذكاء الصناعي."
+      });
+    }
 
-  res.status(200).json({
-    reply: data.choices[0].message.content
-  })
+    const reply = data.choices?.[0]?.message?.content;
+
+    return res.status(200).json({
+      reply: reply || "لم أستطع توليد الرد."
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      reply: "حدث خطأ في السيرفر."
+    });
+
+  }
 
 }
-          
