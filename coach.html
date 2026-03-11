@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المدرب الذكي | Fitness Factory</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #070b12;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 900px;
+      height: 85vh;
+      background: linear-gradient(180deg, #0d1420 0%, #0a1018 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+    }
+
+    .header {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #0aa2ff, #00e0b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #9fb0c7;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .chat-area {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      max-width: 75%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      line-height: 1.8;
+      font-size: 15px;
+      white-space: pre-wrap;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: rgba(10, 162, 255, 0.10);
+      border: 1px solid rgba(10, 162, 255, 0.15);
+      color: #dcecff;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: rgba(0, 224, 184, 0.12);
+      border: 1px solid rgba(0, 224, 184, 0.15);
+      color: #dffdf7;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 20px 16px;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #0b1017;
+      color: #cfe3ff;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    .chip:hover {
+      border-color: #0aa2ff;
+      color: #fff;
+    }
+
+    .input-bar {
+      display: flex;
+      gap: 12px;
+      padding: 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .input-bar input {
+      flex: 1;
+      padding: 15px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #0b1017;
+      color: #fff;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .input-bar button {
+      border: none;
+      border-radius: 14px;
+      padding: 0 22px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #07111b;
+      cursor: pointer;
+      background: linear-gradient(90deg, #0aa2ff, #00e0b8);
+    }
+
+    @media (max-width: 768px) {
+      .app {
+        height: 92vh;
+      }
+
+      .msg {
+        max-width: 88%;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>المدرب الذكي</h1>
+      <p>مرحبًا بك في مدرب Fitness Factory الذكي. هذه النسخة الأولى من الواجهة، وبعدها نربطها بالذكاء الصناعي الفعلي.</p>
+    </div>
+
+    <div class="chat-area" id="chatArea">
+      <div class="msg bot">أهلًا فيك 👋  
+أنا المدرب الذكي الخاص بـ Fitness Factory.  
+اسألني عن التمارين، التغذية، السعرات، الماكروز أو بناء البرامج التدريبية.</div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="chip" onclick="sendQuick('كم احتاج بروتين يوميًا؟')">كم احتاج بروتين؟</button>
+      <button class="chip" onclick="sendQuick('أعطني برنامج صدر للمبتدئين')">برنامج صدر مبتدئ</button>
+      <button class="chip" onclick="sendQuick('أعطني بدائل سناك صحية')">بدائل سناك صحية</button>
+      <button class="chip" onclick="sendQuick('كيف أبدأ تنشيف بشكل صحيح؟')">كيف أبدأ تنشيف؟</button>
+    </div>
+
+    <div class="input-bar">
+      <input id="userInput" type="text" placeholder="اكتب سؤالك هنا..." />
+      <button onclick="sendMessage()">إرسال</button>
+    </div>
+  </div>
+
+  <script>
+    const chatArea = document.getElementById("chatArea");
+    const userInput = document.getElementById("userInput");
+
+    function appendMessage(text, type) {
+      const div = document.createElement("div");
+      div.className = `msg ${type}`;
+      div.textContent = text;
+      chatArea.appendChild(div);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    function fakeReply(message) {
+      const text = message.toLowerCase();
+
+      if (text.includes("بروتين")) {
+        return "بشكل عام، نقطة بداية ممتازة هي 1.6 إلى 2.2 جم بروتين لكل كجم من وزن الجسم يوميًا، خاصة إذا كان هدفك الحفاظ على العضلات أو بناؤها.";
+      }
+
+      if (text.includes("صدر")) {
+        return "برنامج صدر مبتدئ:\n1) Bench Press\n2) Incline Dumbbell Press\n3) Chest Fly Machine\n4) Push-ups\nابدأ بـ 3 إلى 4 جولات و8-12 تكرار.";
+      }
+
+      if (text.includes("سناك") || text.includes("بدائل")) {
+        return "أمثلة سناك صحي: زبادي يوناني، فشار بدون زبدة، فاكهة مع زبدة فول سوداني، بروتين بار مناسب، أو لبنة لايت مع خبز أسمر.";
+      }
+
+      if (text.includes("تنشيف")) {
+        return "ابدأ التنشيف بعجز سعري معتدل، حافظ على البروتين مرتفع، استمر بالمقاومة، وراقب الوزن والمقاسات أسبوعيًا بدل الاعتماد على الميزان فقط.";
+      }
+
+      return "وصلني سؤالك ✅\nحاليًا هذه نسخة واجهة تجريبية، والخطوة الجاية راح أربطها بالذكاء الصناعي الفعلي عشان يصير الرد ذكي ومتخصص أكثر.";
+    }
+
+    function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      appendMessage(message, "user");
+      userInput.value = "";
+
+      setTimeout(() => {
+        appendMessage(fakeReply(message), "bot");
+      }, 500);
+    }
+
+    function sendQuick(text) {
+      userInput.value = text;
+      sendMessage();
+    }
+
+    userInput.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
