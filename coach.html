@@ -233,12 +233,17 @@
       const loadingMsg = appendMessage("جاري التفكير...", "bot");
 
       try {
+        const activationCode = localStorage.getItem("ff_activation_code");
+
         const response = await fetch("/api/coach", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ message })
+          body: JSON.stringify({
+            message,
+            activationCode
+          })
         });
 
         let data;
