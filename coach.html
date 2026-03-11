@@ -107,9 +107,14 @@
       transition: 0.2s;
     }
 
-    .chip:hover {
+    .chip:hover:not(:disabled) {
       border-color: #0aa2ff;
       color: #fff;
+    }
+
+    .chip:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .input-bar {
@@ -131,6 +136,10 @@
       font-size: 15px;
     }
 
+    .input-bar input:disabled {
+      opacity: 0.6;
+    }
+
     .input-bar button {
       border: none;
       border-radius: 14px;
@@ -140,6 +149,11 @@
       color: #07111b;
       cursor: pointer;
       background: linear-gradient(90deg, #0aa2ff, #00e0b8);
+    }
+
+    .input-bar button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
     }
 
     @media (max-width: 768px) {
@@ -161,12 +175,12 @@
   <div class="app">
     <div class="header">
       <h1>المدرب الذكي</h1>
-      <p>مرحبًا بك في مدرب Fitness Factory الذكي. هذه النسخة الأولى من الواجهة، وبعدها نربطها بالذكاء الصناعي الفعلي.</p>
+      <p>مرحبًا بك في مدرب Fitness Factory الذكي. اسأل عن التمارين، التغذية، السعرات، الماكروز أو بناء البرامج التدريبية.</p>
     </div>
 
     <div class="chat-area" id="chatArea">
-      <div class="msg bot">أهلًا فيك 👋  
-أنا المدرب الذكي الخاص بـ Fitness Factory.  
+      <div class="msg bot">أهلًا فيك 👋
+أنا المدرب الذكي الخاص بـ Fitness Factory.
 اسألني عن التمارين، التغذية، السعرات، الماكروز أو بناء البرامج التدريبية.</div>
     </div>
 
@@ -179,13 +193,19 @@
 
     <div class="input-bar">
       <input id="userInput" type="text" placeholder="اكتب سؤالك هنا..." />
-      <button onclick="sendMessage()">إرسال</button>
+      <button id="sendBtn" onclick="sendMessage()">إرسال</button>
     </div>
   </div>
 
   <script>
+    if (!localStorage.getItem("ff_is_activated")) {
+      window.location.href = "activation.html";
+    }
+
     const chatArea = document.getElementById("chatArea");
     const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const chips = Array.from(document.querySelectorAll(".chip"));
 
     function appendMessage(text, type) {
       const div = document.createElement("div");
@@ -193,40 +213,57 @@
       div.textContent = text;
       chatArea.appendChild(div);
       chatArea.scrollTop = chatArea.scrollHeight;
+      return div;
     }
 
-    function fakeReply(message) {
-      const text = message.toLowerCase();
-
-      if (text.includes("بروتين")) {
-        return "بشكل عام، نقطة بداية ممتازة هي 1.6 إلى 2.2 جم بروتين لكل كجم من وزن الجسم يوميًا، خاصة إذا كان هدفك الحفاظ على العضلات أو بناؤها.";
-      }
-
-      if (text.includes("صدر")) {
-        return "برنامج صدر مبتدئ:\n1) Bench Press\n2) Incline Dumbbell Press\n3) Chest Fly Machine\n4) Push-ups\nابدأ بـ 3 إلى 4 جولات و8-12 تكرار.";
-      }
-
-      if (text.includes("سناك") || text.includes("بدائل")) {
-        return "أمثلة سناك صحي: زبادي يوناني، فشار بدون زبدة، فاكهة مع زبدة فول سوداني، بروتين بار مناسب، أو لبنة لايت مع خبز أسمر.";
-      }
-
-      if (text.includes("تنشيف")) {
-        return "ابدأ التنشيف بعجز سعري معتدل، حافظ على البروتين مرتفع، استمر بالمقاومة، وراقب الوزن والمقاسات أسبوعيًا بدل الاعتماد على الميزان فقط.";
-      }
-
-      return "وصلني سؤالك ✅\nحاليًا هذه نسخة واجهة تجريبية، والخطوة الجاية راح أربطها بالذكاء الصناعي الفعلي عشان يصير الرد ذكي ومتخصص أكثر.";
+    function setBusyState(isBusy) {
+      sendBtn.disabled = isBusy;
+      userInput.disabled = isBusy;
+      chips.forEach(chip => chip.disabled = isBusy);
     }
 
-    function sendMessage() {
+    async function sendMessage() {
       const message = userInput.value.trim();
       if (!message) return;
 
       appendMessage(message, "user");
       userInput.value = "";
+      setBusyState(true);
 
-      setTimeout(() => {
-        appendMessage(fakeReply(message), "bot");
-      }, 500);
+      const loadingMsg = appendMessage("جاري التفكير...", "bot");
+
+      try {
+        const response = await fetch("/api/coach", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ message })
+        });
+
+        let data;
+        try {
+          data = await response.json();
+        } catch {
+          data = null;
+        }
+
+        loadingMsg.remove();
+
+        if (!response.ok) {
+          appendMessage(data?.reply || "صار خطأ في الاتصال بالمدرب الذكي.", "bot");
+          return;
+        }
+
+        appendMessage(data?.reply || "ما قدرت أطلع الرد الآن.", "bot");
+      } catch (error) {
+        loadingMsg.remove();
+        appendMessage("تعذر الاتصال بالمدرب الذكي الآن. تأكد من إعدادات API ثم حاول مرة أخرى.", "bot");
+        console.error("Coach fetch error:", error);
+      } finally {
+        setBusyState(false);
+        userInput.focus();
+      }
     }
 
     function sendQuick(text) {
@@ -234,7 +271,7 @@
       sendMessage();
     }
 
-    userInput.addEventListener("keypress", function(e) {
+    userInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         sendMessage();
       }
