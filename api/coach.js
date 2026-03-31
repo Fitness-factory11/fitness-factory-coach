@@ -305,6 +305,22 @@ ${profileSummary}
     }
 
     const reply = openaiData?.choices?.[0]?.message?.content || "لم أستطع توليد الرد.";
+    // 🔥 إذا الرد يحتوي جدول → خزنه
+const looksLikePlan = reply.includes("📅 يوم");
+
+if (looksLikePlan && refreshedProfile) {
+  await fetch(
+    `${SUPABASE_URL}/rest/v1/user_profiles?id=eq.${refreshedProfile.id}`,
+    {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({
+        current_plan: reply,
+        plan_version: (refreshedProfile.plan_version || 1) + 1
+      })
+    }
+  );
+}
 
     // 8) زيادة عداد الاستخدام
     if (!usageData || !usageData.length) {
