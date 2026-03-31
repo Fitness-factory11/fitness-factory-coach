@@ -72,7 +72,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // 3) اقرأ ملف المستخدم إن وجد
+    // 3) اقرأ ملف المستخدم
     const profileRes = await fetch(
       `${SUPABASE_URL}/rest/v1/user_profiles?activation_code=eq.${encodeURIComponent(code)}&select=*`,
       { headers }
@@ -81,18 +81,138 @@ export default async function handler(req, res) {
     const profileData = await profileRes.json();
     const profile = profileData && profileData.length ? profileData[0] : null;
 
-    const profileSummary = profile
+    // 4) استخراج بيانات العميل من رسالته عبر AI
+    const extractionPrompt = `
+استخرج بيانات اللياقة فقط من رسالة المستخدم وأعدها كـ JSON صالح فقط بدون أي شرح.
+
+المفاتيح المطلوبة:
+{
+  "full_name": string|null,
+  "age": number|null,
+  "height_cm": number|null,
+  "weight_kg": number|null,
+  "goal": string|null,
+  "training_days": number|null,
+  "level": string|null,
+  "injuries": string|null,
+  "last_context": string|null
+}
+
+تعليمات:
+- إذا لم تجد قيمة، أرجع null.
+- goal أمثلة: تضخيم / تنشيف / الحفاظ على الوزن / زيادة اللياقة
+- level أمثلة: مبتدئ / متوسط / متقدم
+- last_context يكون ملخص عربي قصير جدًا لأهم ما فهمته من المستخدم.
+- أخرج JSON فقط.
+`;
+
+    const extractionRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        temperature: 0,
+        messages: [
+          { role: "system", content: extractionPrompt },
+          { role: "user", content: message }
+        ]
+      })
+    });
+
+    const extractionData = await extractionRes.json();
+
+    let extracted = {
+      full_name: null,
+      age: null,
+      height_cm: null,
+      weight_kg: null,
+      goal: null,
+      training_days: null,
+      level: null,
+      injuries: null,
+      last_context: null
+    };
+
+    if (extractionRes.ok) {
+      try {
+        const raw = extractionData?.choices?.[0]?.message?.content || "{}";
+        extracted = JSON.parse(raw);
+      } catch (e) {
+        console.error("JSON parse error:", e);
+      }
+    }
+
+    // 5) حفظ/تحديث بيانات العميل إذا وجدنا شيء مفيد
+    const hasUsefulData = Object.values(extracted).some(
+      (v) => v !== null && v !== ""
+    );
+
+    if (hasUsefulData) {
+      const mergedProfile = {
+        activation_code: code,
+        full_name: extracted.full_name ?? profile?.full_name ?? null,
+        age: extracted.age ?? profile?.age ?? null,
+        height_cm: extracted.height_cm ?? profile?.height_cm ?? null,
+        weight_kg: extracted.weight_kg ?? profile?.weight_kg ?? null,
+        goal: extracted.goal ?? profile?.goal ?? null,
+        training_days: extracted.training_days ?? profile?.training_days ?? null,
+        level: extracted.level ?? profile?.level ?? null,
+        injuries: extracted.injuries ?? profile?.injuries ?? null,
+        current_plan: profile?.current_plan ?? null,
+        last_context: extracted.last_context ?? profile?.last_context ?? null,
+        plan_version: profile?.plan_version ?? 1,
+        updated_at: new Date().toISOString()
+      };
+
+      if (!profile) {
+        mergedProfile.created_at = new Date().toISOString();
+
+        await fetch(`${SUPABASE_URL}/rest/v1/user_profiles`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(mergedProfile)
+        });
+      } else {
+        await fetch(
+          `${SUPABASE_URL}/rest/v1/user_profiles?id=eq.${profile.id}`,
+          {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify(mergedProfile)
+          }
+        );
+      }
+    }
+
+    // 6) اقرأ الملف مرة ثانية بعد التحديث
+    const refreshedProfileRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/user_profiles?activation_code=eq.${encodeURIComponent(code)}&select=*`,
+      { headers }
+    );
+
+    const refreshedProfileData = await refreshedProfileRes.json();
+    const refreshedProfile =
+      refreshedProfileData && refreshedProfileData.length
+        ? refreshedProfileData[0]
+        : profile;
+
+    const profileSummary = refreshedProfile
       ? `
 بيانات العميل الحالية:
-- الاسم: ${profile.full_name || "غير محدد"}
-- العمر: ${profile.age || "غير محدد"}
-- الطول: ${profile.height_cm || "غير محدد"} سم
-- الوزن: ${profile.weight_kg || "غير محدد"} كجم
-- الهدف: ${profile.goal || "غير محدد"}
-- عدد أيام التمرين: ${profile.training_days || "غير محدد"}
-- المستوى: ${profile.level || "غير محدد"}
-- الإصابات/القيود: ${profile.injuries || "لا يوجد"}
-- الجدول الحالي: ${profile.current_plan || "غير محفوظ بعد"}
+- الاسم: ${refreshedProfile.full_name || "غير محدد"}
+- العمر: ${refreshedProfile.age || "غير محدد"}
+- الطول: ${refreshedProfile.height_cm || "غير محدد"} سم
+- الوزن: ${refreshedProfile.weight_kg || "غير محدد"} كجم
+- الهدف: ${refreshedProfile.goal || "غير محدد"}
+- عدد أيام التمرين: ${refreshedProfile.training_days || "غير محدد"}
+- المستوى: ${refreshedProfile.level || "غير محدد"}
+- الإصابات/القيود: ${refreshedProfile.injuries || "لا يوجد"}
+- الجدول الحالي: ${refreshedProfile.current_plan || "غير محفوظ بعد"}
+- آخر سياق: ${refreshedProfile.last_context || "لا يوجد"}
+- إصدار الجدول: ${refreshedProfile.plan_version || 1}
 `
       : `
 لا توجد بيانات محفوظة لهذا العميل حتى الآن.
@@ -136,7 +256,7 @@ Examine.com
 ${profileSummary}
 `;
 
-    // 4) اسأل OpenAI
+    // 7) اسأل OpenAI للرد النهائي
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -164,7 +284,7 @@ ${profileSummary}
 
     const reply = openaiData?.choices?.[0]?.message?.content || "لم أستطع توليد الرد.";
 
-    // 5) زوّد عداد الاستخدام
+    // 8) زيادة عداد الاستخدام
     if (!usageData || !usageData.length) {
       await fetch(`${SUPABASE_URL}/rest/v1/daily_usage`, {
         method: "POST",
@@ -188,7 +308,7 @@ ${profileSummary}
       );
     }
 
-    // 6) خزّن الجلسة
+    // 9) حفظ الجلسة
     await fetch(`${SUPABASE_URL}/rest/v1/coach_sessions`, {
       method: "POST",
       headers,
