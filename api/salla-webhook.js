@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
-const SUPABASE_URL = "حط رابط مشروعك";
-const SUPABASE_KEY = "حط مفتاح anon";
+const SUPABASE_URL = "https://kxaqysqncifsvsezhflo.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4YXF5c3FuY2lmc3ZzZXpoZmxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjg3MDIsImV4cCI6MjA4ODc0NDcwMn0.5ypXdL_2PGBY-2Ys57Rt7bw1o-UltCAlVWIoT54rvgI";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
