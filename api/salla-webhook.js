@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         },
         items: [
           {
-            product_id: "123456"
+            product_id: "1179095647"
           }
         ]
       };
