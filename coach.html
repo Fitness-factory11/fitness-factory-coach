@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>المدرب الذكي | Fitness Factory</title>
   <style>
     :root {
@@ -18,13 +18,20 @@
       --cyan-soft: rgba(10, 162, 255, 0.10);
       --teal-soft: rgba(0, 224, 184, 0.11);
       --glow: 0 18px 55px rgba(0,0,0,0.38);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
       font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
     }
 
     body {
@@ -37,7 +44,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 18px;
     }
 
     .app {
@@ -67,31 +74,33 @@
     }
 
     .header {
-      padding: 18px 22px;
+      padding: 14px 18px;
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
+      min-height: 74px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       min-width: 0;
+      flex: 1;
     }
 
     .avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(10,162,255,0.18), rgba(0,224,184,0.18));
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(10,162,255,0.2), rgba(0,224,184,0.2));
       border: 1px solid rgba(255,255,255,0.08);
       display: grid;
       place-items: center;
-      font-size: 24px;
+      font-size: 22px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
       flex-shrink: 0;
     }
@@ -101,33 +110,38 @@
     }
 
     .header h1 {
-      font-size: 27px;
+      font-size: 22px;
       font-weight: 800;
       background: linear-gradient(90deg, #16a7ff, #00e0b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 4px;
+      line-height: 1.15;
       letter-spacing: -0.3px;
+      margin-bottom: 4px;
     }
 
     .header p {
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-      max-width: 580px;
+      font-size: 12px;
+      line-height: 1.55;
+      max-width: 470px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 14px;
+      padding: 10px 12px;
       border-radius: 999px;
       background: rgba(255,255,255,0.03);
       border: 1px solid var(--line);
       color: #d7fff8;
-      font-size: 13px;
+      font-size: 12px;
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -140,22 +154,57 @@
       box-shadow: 0 0 0 6px rgba(0,224,184,0.10);
     }
 
+    .welcome-card {
+      margin: 0 0 2px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, rgba(10,162,255,0.07), rgba(0,224,184,0.05));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      color: #dcecff;
+    }
+
+    .welcome-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .welcome-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ebfbff;
+    }
+
+    .welcome-text {
+      line-height: 1.7;
+      font-size: 13px;
+      color: #bdd1e6;
+    }
+
+    .mini-status {
+      font-size: 11px;
+      color: #b2fff0;
+      background: rgba(0,224,184,0.08);
+      border: 1px solid rgba(0,224,184,0.12);
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
     .chat-area {
       flex: 1;
-      padding: 22px 20px 14px;
+      padding: 14px 14px 10px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       scroll-behavior: smooth;
     }
 
     .chat-area::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .chat-area::-webkit-scrollbar-track {
-      background: transparent;
+      width: 8px;
     }
 
     .chat-area::-webkit-scrollbar-thumb {
@@ -168,30 +217,31 @@
       width: 100%;
     }
 
-    .msg-row.bot-row {
-      justify-content: flex-start;
-    }
-
-    .msg-row.user-row {
-      justify-content: flex-end;
-    }
+    .msg-row.bot-row { justify-content: flex-start; }
+    .msg-row.user-row { justify-content: flex-end; }
 
     .msg {
-      max-width: min(78%, 640px);
-      padding: 16px 18px;
+      max-width: min(82%, 620px);
+      padding: 14px 15px;
       border-radius: 20px;
-      line-height: 1.95;
-      font-size: 15px;
+      line-height: 1.8;
+      font-size: 14px;
       white-space: pre-wrap;
       position: relative;
       backdrop-filter: blur(12px);
       box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+      animation: fadeUp .18s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .msg-label {
-      font-size: 12px;
-      margin-bottom: 8px;
-      opacity: 0.9;
+      font-size: 11px;
+      margin-bottom: 7px;
+      opacity: 0.92;
       font-weight: 700;
     }
 
@@ -203,9 +253,7 @@
       border-top-right-radius: 10px;
     }
 
-    .bot .msg-label {
-      color: #8ed2ff;
-    }
+    .bot .msg-label { color: #8ed2ff; }
 
     .user {
       background: linear-gradient(180deg, rgba(0,224,184,0.14), rgba(0,224,184,0.08));
@@ -215,41 +263,30 @@
       border-top-left-radius: 10px;
     }
 
-    .user .msg-label {
-      color: #9ff7e8;
-    }
-
-    .welcome-card {
-      margin: 2px 0 4px;
-      padding: 16px 18px;
-      background: linear-gradient(135deg, rgba(10,162,255,0.07), rgba(0,224,184,0.05));
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 18px;
-      color: #dcecff;
-      line-height: 1.85;
-      font-size: 14px;
-    }
+    .user .msg-label { color: #9ff7e8; }
 
     .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 10px;
-      padding: 0 20px 16px;
+      padding: 0 14px 12px;
     }
 
     .chip {
-      padding: 10px 14px;
-      border-radius: 999px;
+      min-height: 46px;
+      padding: 12px 12px;
+      border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      color: #cfe3ff;
+      background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01));
+      color: #d7e7f7;
       cursor: pointer;
       font-size: 13px;
+      line-height: 1.4;
       transition: 0.2s ease;
     }
 
-    .chip:hover:not(:disabled) {
-      border-color: rgba(10,162,255,0.4);
+    .chip:hover:not(:disabled), .chip:active:not(:disabled) {
+      border-color: rgba(10,162,255,0.32);
       background: rgba(10,162,255,0.08);
       color: #fff;
       transform: translateY(-1px);
@@ -261,26 +298,28 @@
     }
 
     .input-wrap {
-      padding: 16px 18px 18px;
+      padding: 10px 12px calc(12px + var(--safe-bottom));
       border-top: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      backdrop-filter: blur(12px);
     }
 
     .input-bar {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px;
+      gap: 10px;
+      padding: 8px;
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      background: rgba(8, 13, 20, 0.88);
+      border-radius: 18px;
+      background: rgba(8, 13, 20, 0.92);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
     }
 
     .input-bar input {
       flex: 1;
-      padding: 14px 14px;
-      border-radius: 14px;
+      min-width: 0;
+      padding: 12px 10px;
+      border-radius: 12px;
       border: none;
       background: transparent;
       color: #fff;
@@ -288,19 +327,15 @@
       font-size: 15px;
     }
 
-    .input-bar input::placeholder {
-      color: #7d91a9;
-    }
-
-    .input-bar input:disabled {
-      opacity: 0.6;
-    }
+    .input-bar input::placeholder { color: #7d91a9; }
+    .input-bar input:disabled { opacity: 0.6; }
 
     .input-bar button {
       border: none;
-      border-radius: 16px;
-      padding: 14px 22px;
-      font-size: 15px;
+      border-radius: 14px;
+      min-width: 62px;
+      padding: 12px 16px;
+      font-size: 14px;
       font-weight: 800;
       color: #05121c;
       cursor: pointer;
@@ -346,44 +381,42 @@
     @media (max-width: 768px) {
       body {
         padding: 0;
+        align-items: stretch;
       }
 
       .app {
         max-width: 100%;
-        height: 100vh;
+        height: 100dvh;
         border-radius: 0;
+        border-left: none;
+        border-right: none;
       }
 
       .header {
-        padding: 16px;
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .header h1 {
-        font-size: 24px;
+        padding-top: calc(10px + var(--safe-top));
       }
 
       .header p {
-        font-size: 12px;
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .header {
+        padding-inline: 12px;
+        gap: 10px;
       }
 
-      .status-badge {
-        align-self: flex-start;
-      }
-
-      .msg {
-        max-width: 90%;
-        font-size: 14px;
-      }
-
-      .input-wrap {
-        padding: 14px;
-      }
-
-      .input-bar button {
-        padding: 14px 18px;
-      }
+      .header h1 { font-size: 20px; }
+      .avatar { width: 40px; height: 40px; font-size: 20px; border-radius: 12px; }
+      .status-badge { padding: 8px 10px; font-size: 11px; }
+      .chat-area { padding-inline: 10px; }
+      .msg { max-width: 86%; font-size: 13px; padding: 13px 14px; }
+      .quick-actions { padding-inline: 10px; gap: 8px; }
+      .chip { min-height: 42px; font-size: 12.5px; padding: 10px 10px; }
+      .input-wrap { padding-inline: 10px; }
+      .welcome-card { padding: 12px 13px; }
+      .welcome-text { font-size: 12px; }
     }
   </style>
 </head>
@@ -404,7 +437,13 @@
     </div>
 
     <div class="chat-area" id="chatArea">
-      <div class="welcome-card">حياك 💪<br>أنا مدربك الذكي من Fitness Factory، خلنا نضبط هدفك صح. اسألني عن التمارين، التغذية، السعرات، الماكروز أو تعديل برنامجك الحالي.</div>
+      <div class="welcome-card">
+        <div class="welcome-top">
+          <div class="welcome-title">جاهز نبدأ؟</div>
+          <div class="mini-status">مدربك معك الآن</div>
+        </div>
+        <div class="welcome-text">خلنا نضبط هدفك صح — اسألني عن التمارين، التغذية، السعرات، الماكروز أو تعديل برنامجك الحالي.</div>
+      </div>
 
       <div class="msg-row bot-row">
         <div class="msg bot">
