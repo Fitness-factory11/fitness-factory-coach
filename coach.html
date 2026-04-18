@@ -1,152 +1,540 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>مدربك الذكي</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المدرب الذكي | Fitness Factory</title>
+  <style>
+    :root {
+      --bg: #060b12;
+      --panel: #0b1119;
+      --panel-2: #101926;
+      --panel-3: #0d1520;
+      --text: #f4fbff;
+      --muted: #93a8bf;
+      --line: rgba(255,255,255,0.07);
+      --cyan: #0aa2ff;
+      --teal: #00e0b8;
+      --cyan-soft: rgba(10, 162, 255, 0.10);
+      --teal-soft: rgba(0, 224, 184, 0.11);
+      --glow: 0 18px 55px rgba(0,0,0,0.38);
+    }
 
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #f5f7fa, #e4e8ee);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
 
-/* HEADER */
-.header {
-  background: #111;
-  color: white;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, rgba(10,162,255,0.08), transparent 26%),
+        radial-gradient(circle at top left, rgba(0,224,184,0.06), transparent 20%),
+        linear-gradient(180deg, #070b12 0%, #050910 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
-.header img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
+    .app {
+      width: 100%;
+      max-width: 920px;
+      height: min(88vh, 900px);
+      background: linear-gradient(180deg, rgba(12,18,28,0.98) 0%, rgba(8,13,20,0.99) 100%);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--glow);
+      position: relative;
+      isolation: isolate;
+    }
 
-.header .title {
-  font-weight: bold;
-}
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 15%, rgba(10,162,255,0.07), transparent 22%),
+        radial-gradient(circle at 15% 85%, rgba(0,224,184,0.06), transparent 20%);
+      pointer-events: none;
+      z-index: -1;
+    }
 
-.header .status {
-  font-size: 12px;
-  color: #4caf50;
-}
+    .header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-/* CHAT */
-.chat {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
 
-/* BUBBLES */
-.message {
-  max-width: 70%;
-  padding: 10px 14px;
-  margin-bottom: 10px;
-  border-radius: 18px;
-  line-height: 1.5;
-}
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(10,162,255,0.18), rgba(0,224,184,0.18));
+      border: 1px solid rgba(255,255,255,0.08);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      flex-shrink: 0;
+    }
 
-.user {
-  background: #007bff;
-  color: white;
-  margin-left: auto;
-  border-bottom-right-radius: 5px;
-}
+    .header-text {
+      min-width: 0;
+    }
 
-.bot {
-  background: white;
-  color: #333;
-  margin-right: auto;
-  border-bottom-left-radius: 5px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+    .header h1 {
+      font-size: 27px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #16a7ff, #00e0b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
 
-/* INPUT */
-.input-area {
-  display: flex;
-  padding: 10px;
-  background: #fff;
-  border-top: 1px solid #ddd;
-}
+    .header p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+      max-width: 580px;
+    }
 
-.input-area input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  outline: none;
-}
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      color: #d7fff8;
+      font-size: 13px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
-.input-area button {
-  margin-left: 10px;
-  padding: 10px 15px;
-  border: none;
-  background: #111;
-  color: white;
-  border-radius: 20px;
-  cursor: pointer;
-}
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 6px rgba(0,224,184,0.10);
+    }
 
-.input-area button:hover {
-  background: #333;
-}
-</style>
+    .chat-area {
+      flex: 1;
+      padding: 22px 20px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-area::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .chat-area::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-area::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+    }
+
+    .msg-row {
+      display: flex;
+      width: 100%;
+    }
+
+    .msg-row.bot-row {
+      justify-content: flex-start;
+    }
+
+    .msg-row.user-row {
+      justify-content: flex-end;
+    }
+
+    .msg {
+      max-width: min(78%, 640px);
+      padding: 16px 18px;
+      border-radius: 20px;
+      line-height: 1.95;
+      font-size: 15px;
+      white-space: pre-wrap;
+      position: relative;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+    }
+
+    .msg-label {
+      font-size: 12px;
+      margin-bottom: 8px;
+      opacity: 0.9;
+      font-weight: 700;
+    }
+
+    .bot {
+      background: linear-gradient(180deg, rgba(10,162,255,0.12), rgba(10,162,255,0.08));
+      border: 1px solid rgba(10,162,255,0.18);
+      color: #e8f6ff;
+      border-bottom-right-radius: 20px;
+      border-top-right-radius: 10px;
+    }
+
+    .bot .msg-label {
+      color: #8ed2ff;
+    }
+
+    .user {
+      background: linear-gradient(180deg, rgba(0,224,184,0.14), rgba(0,224,184,0.08));
+      border: 1px solid rgba(0,224,184,0.18);
+      color: #eafffb;
+      border-bottom-left-radius: 20px;
+      border-top-left-radius: 10px;
+    }
+
+    .user .msg-label {
+      color: #9ff7e8;
+    }
+
+    .welcome-card {
+      margin: 2px 0 4px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(10,162,255,0.07), rgba(0,224,184,0.05));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      color: #dcecff;
+      line-height: 1.85;
+      font-size: 14px;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 20px 16px;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      color: #cfe3ff;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s ease;
+    }
+
+    .chip:hover:not(:disabled) {
+      border-color: rgba(10,162,255,0.4);
+      background: rgba(10,162,255,0.08);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .chip:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .input-wrap {
+      padding: 16px 18px 18px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    }
+
+    .input-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      background: rgba(8, 13, 20, 0.88);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    .input-bar input {
+      flex: 1;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: none;
+      background: transparent;
+      color: #fff;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .input-bar input::placeholder {
+      color: #7d91a9;
+    }
+
+    .input-bar input:disabled {
+      opacity: 0.6;
+    }
+
+    .input-bar button {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #05121c;
+      cursor: pointer;
+      background: linear-gradient(90deg, #0aa2ff, #00e0b8);
+      box-shadow: 0 8px 20px rgba(10,162,255,0.18);
+      transition: 0.2s ease;
+    }
+
+    .input-bar button:hover:enabled {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .input-bar button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .typing {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 18px;
+    }
+
+    .typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #8dd5ff;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.15s; }
+    .typing span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 0;
+      }
+
+      .app {
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+      }
+
+      .header {
+        padding: 16px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .header p {
+        font-size: 12px;
+      }
+
+      .status-badge {
+        align-self: flex-start;
+      }
+
+      .msg {
+        max-width: 90%;
+        font-size: 14px;
+      }
+
+      .input-wrap {
+        padding: 14px;
+      }
+
+      .input-bar button {
+        padding: 14px 18px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="app">
+    <div class="header">
+      <div class="brand">
+        <div class="avatar">💪</div>
+        <div class="header-text">
+          <h1>المدرب الذكي</h1>
+          <p>مدرب Fitness Factory الخاص فيك — يشرح لك، يعدل لك، ويضبط التغذية والتمارين بشكل عملي وذكي.</p>
+        </div>
+      </div>
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        متصل الآن
+      </div>
+    </div>
 
-<div class="header">
-  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
-  <div>
-    <div class="title">مدربك الذكي 💪</div>
-    <div class="status">متصل الآن</div>
+    <div class="chat-area" id="chatArea">
+      <div class="welcome-card">حياك 💪<br>أنا مدربك الذكي من Fitness Factory، خلنا نضبط هدفك صح. اسألني عن التمارين، التغذية، السعرات، الماكروز أو تعديل برنامجك الحالي.</div>
+
+      <div class="msg-row bot-row">
+        <div class="msg bot">
+          <div class="msg-label">مدربك الذكي 👋</div>
+          أهلًا فيك
+أنا المدرب الذكي الخاص بـ Fitness Factory.
+اسألني عن التمارين، التغذية، السعرات، الماكروز أو تعديل برنامجك الحالي.
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="chip" onclick="sendQuick('كم احتاج بروتين يوميًا؟')">كم احتاج بروتين؟</button>
+      <button class="chip" onclick="sendQuick('أعطني برنامج صدر للمبتدئين')">برنامج صدر مبتدئ</button>
+      <button class="chip" onclick="sendQuick('أعطني بدائل سناك صحية')">بدائل سناك صحية</button>
+      <button class="chip" onclick="sendQuick('كيف أبدأ تنشيف بشكل صحيح؟')">كيف أبدأ تنشيف؟</button>
+    </div>
+
+    <div class="input-wrap">
+      <div class="input-bar">
+        <input id="userInput" type="text" placeholder="اكتب سؤالك هنا..." />
+        <button id="sendBtn" onclick="sendMessage()">إرسال</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="chat" id="chat"></div>
+  <script>
+    if (!localStorage.getItem("ff_is_activated")) {
+      window.location.href = "activation.html";
+    }
 
-<div class="input-area">
-  <input id="input" placeholder="اكتب رسالتك...">
-  <button onclick="sendMessage()">إرسال</button>
-</div>
+    const chatArea = document.getElementById("chatArea");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const chips = Array.from(document.querySelectorAll(".chip"));
 
-<script>
-async function sendMessage() {
-  const input = document.getElementById("input");
-  const message = input.value.trim();
-  if (!message) return;
+    function appendMessage(text, type, isTyping = false) {
+      const row = document.createElement("div");
+      row.className = `msg-row ${type === "user" ? "user-row" : "bot-row"}`;
 
-  addMessage(message, "user");
-  input.value = "";
+      const div = document.createElement("div");
+      div.className = `msg ${type}`;
 
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message })
-  });
+      const label = document.createElement("div");
+      label.className = "msg-label";
+      label.textContent = type === "user" ? "أنت" : "مدربك الذكي";
+      div.appendChild(label);
 
-  const data = await res.json();
-  addMessage(data.reply, "bot");
-}
+      if (isTyping) {
+        const typing = document.createElement("div");
+        typing.className = "typing";
+        typing.innerHTML = "<span></span><span></span><span></span>";
+        div.appendChild(typing);
+      } else {
+        const content = document.createElement("div");
+        content.textContent = text;
+        div.appendChild(content);
+      }
 
-function addMessage(text, type) {
-  const chat = document.getElementById("chat");
-  const div = document.createElement("div");
-  div.className = "message " + type;
-  div.innerText = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-</script>
+      row.appendChild(div);
+      chatArea.appendChild(row);
+      chatArea.scrollTop = chatArea.scrollHeight;
+      return row;
+    }
 
+    function setBusyState(isBusy) {
+      sendBtn.disabled = isBusy;
+      userInput.disabled = isBusy;
+      chips.forEach(chip => chip.disabled = isBusy);
+    }
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      appendMessage(message, "user");
+      userInput.value = "";
+      setBusyState(true);
+
+      const loadingMsg = appendMessage("", "bot", true);
+
+      try {
+        const activationCode = localStorage.getItem("ff_activation_code");
+
+        const response = await fetch("/api/coach", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message,
+            activationCode
+          })
+        });
+
+        let data;
+        try {
+          data = await response.json();
+        } catch {
+          data = null;
+        }
+
+        loadingMsg.remove();
+
+        if (!response.ok) {
+          appendMessage(data?.reply || "صار خطأ في الاتصال بالمدرب الذكي.", "bot");
+          return;
+        }
+
+        appendMessage(data?.reply || "ما قدرت أطلع الرد الآن.", "bot");
+      } catch (error) {
+        loadingMsg.remove();
+        appendMessage("تعذر الاتصال بالمدرب الذكي الآن. تأكد من إعدادات API ثم حاول مرة أخرى.", "bot");
+        console.error("Coach fetch error:", error);
+      } finally {
+        setBusyState(false);
+        userInput.focus();
+      }
+    }
+
+    function sendQuick(text) {
+      userInput.value = text;
+      sendMessage();
+    }
+
+    userInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
 </body>
 </html>
