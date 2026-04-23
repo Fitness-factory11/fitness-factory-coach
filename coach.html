@@ -69,23 +69,23 @@
     }
 
     .topbar {
-      min-height: 64px;
-      padding: calc(12px + var(--safe-top)) 16px 12px;
+      min-height: 72px;
+      padding: calc(10px + var(--safe-top)) 16px 10px;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       border-bottom: 1px solid var(--line-soft);
-      background: rgba(10,12,16,.78);
-      backdrop-filter: blur(16px);
+      background: rgba(10,12,16,.85);
+      backdrop-filter: blur(18px);
     }
 
     .header-logo {
-      height: 28px;
+      height: 52px;
       width: auto;
       object-fit: contain;
       opacity: .98;
       display: block;
-      filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.12));
+      filter: drop-shadow(0 4px 12px rgba(0, 229, 255, 0.25));
     }
 
     .icon-btn {
@@ -364,7 +364,13 @@
       .chip { min-height: 86px; }
       .info-grid { grid-template-columns: 1fr; }
       .status-pill { padding: 7px 10px; font-size: 11px; }
-      .header-logo { height: 24px; }
+      .header-logo {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      opacity: .98;
+      display: block;
+      filter: drop-shadow(0 4px 12px rgba(0, 229, 255, 0.25));
     }
   </style>
 </head>
