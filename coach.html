@@ -71,14 +71,23 @@
     .topbar {
       min-height: 64px;
       padding: calc(12px + var(--safe-top)) 16px 12px;
-      display: grid;
-      grid-template-columns: 40px 1fr 40px;
+      display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
       border-bottom: 1px solid var(--line-soft);
       background: rgba(10,12,16,.78);
       backdrop-filter: blur(16px);
     }
+
+    .header-logo {
+      height: 28px;
+      width: auto;
+      object-fit: contain;
+      opacity: .98;
+      display: block;
+      filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.12));
+    }
+
     .icon-btn {
       width: 40px; height: 40px; border-radius: 12px;
       border: 1px solid var(--line);
@@ -355,15 +364,14 @@
       .chip { min-height: 86px; }
       .info-grid { grid-template-columns: 1fr; }
       .status-pill { padding: 7px 10px; font-size: 11px; }
+      .header-logo { height: 24px; }
     }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="topbar">
-      <button class="icon-btn" aria-label="القائمة">☰</button>
-      <div class="app-title">فيتنس فاكتوري</div>
-      <button class="icon-btn" aria-label="التنبيهات">🔔</button>
+      <img src="logo.png.png" alt="Fitness Factory Logo" class="header-logo">
     </div>
 
     <div class="hero">
